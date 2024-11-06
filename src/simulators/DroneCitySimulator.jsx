@@ -2,12 +2,11 @@ import { AppContainer } from '../components/AppContainer.jsx';
 import { useRef, useState, useEffect } from "react";
 import {Toolbar} from '../components/Toolbar.jsx'
 import emitter from '../config/eventEmmiter.js';
-import Egypt from '../environments/Egypt.jsx';
 import BlockPad from '../components/blockly/BlockPad.jsx';
-import "../css/droneSpaceSimulator.css";
+import City from '../environments/City.jsx';
+import "../css/droneCitySimulator.css";
 
-
-const DroneEgyptSimulator = () => {
+const DroneCitySimulator = () => {
   const droneRef = useRef(); // Create a ref for the Drone component
   const [measurementView, setMeasurementView] = useState(false);
   const [mouseControl, setMouseControl] = useState(false);
@@ -47,6 +46,7 @@ const DroneEgyptSimulator = () => {
       return () => clearInterval(interval); // Clean up on unmount
     }, []);
   
+  
     return (
       <AppContainer>     
           <div className="simulation-container">
@@ -55,8 +55,8 @@ const DroneEgyptSimulator = () => {
             </div>
             
             <div className="canvas-container">
-              <Toolbar dronePosition={dronePosition} />
-              <Egypt 
+              <Toolbar dronePosition={dronePosition}/>
+              <City
                 droneRef={droneRef} 
                 measurementViewEnabled={measurementView}
                 mouseControlEnabled={mouseControl}  />
@@ -66,4 +66,4 @@ const DroneEgyptSimulator = () => {
     );
 };
 
-export default DroneEgyptSimulator;
+export default DroneCitySimulator;

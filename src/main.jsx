@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import DroneSpaceSimulator from "./simulators/DroneSpaceSimulator.jsx";
 import DroneSlateSimulator from "./simulators/DroneSlateSimulator.jsx";
 import DroneEgyptSimulator from "./simulators/DroneEgyptSimulator.jsx";
+import DroneCitySimulator from "./simulators/DroneCitySimulator.jsx";
 
 import HomePage from './home/dashboard/Homepage.jsx';
 
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/space" element={<DroneSpaceSimulator />} />
         <Route path="/slate" element={<DroneSlateSimulator />} />
         <Route path="/egypt" element={<DroneEgyptSimulator />} />
+        <Route path="/city"  element={<DroneCitySimulator />} />
 
       </Routes>
     </HashRouter>

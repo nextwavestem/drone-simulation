@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
-
 import { Canvas, useThree } from '@react-three/fiber';
-import { OrbitControls, Environment,useGLTF } from '@react-three/drei';
+import { OrbitControls,  Environment,useGLTF } from '@react-three/drei';
 import { useRef, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
@@ -105,6 +104,7 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
   }
 };
 
+
 const displayCoordinatesText = (text, position) => {
   loader.load('/node_modules/three/examples/fonts/helvetiker_regular.typeface.json', (font) => {
     const textGeometry = new TextGeometry(text, {
@@ -131,20 +131,16 @@ const displayCoordinatesText = (text, position) => {
 
 
 
-const Model = () => {
-  const { scene } = useGLTF('assets/models/egypt/environment.glb'); 
-  const modelPosition = [0, -10, 10];
-
-  // Set the desired rotation (in radians)
-  const rotation = [0, Math.PI / 4, 0]; // Example: Rotate 45 degrees around the Y-axis
-
-  // Apply rotation directly to the scene
+const CityModel = () => {
+  // const { scene } = useGLTF('assets/models/egypt/environment.glb'); // Load the GLB model
+  const { scene } = useGLTF('assets/models/city/city/city.glb'); // Load the GLB model
+  const modelPosition = [0, -10, 3]; // Set your desired position (x, y, z)
+  const rotation = [0, -Math.PI / 4, 0];
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={50} />;
+  return <primitive object={scene} position={modelPosition} scale={2}/>;
 };
 
-
-const Egypt = ({
+const City = ({
   droneRef,
   measurementViewEnabled,
   mouseControlEnabled,
@@ -159,28 +155,29 @@ const Egypt = ({
   >
       <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> {/* Warm light color */}
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
-      <Model />
+      <CityModel />
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
-      <CameraController measurementViewEnabled={measurementViewEnabled} />
+      <CameraController enableMeasurement={measurementViewEnabled} />
 
       <Drone
         ref={droneRef}
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.5}
-        cameraOffset={[9,6,-3]}
+        droneScale={0.2}
+        cameraOffset={[1, 8, -10]}
         lineColor={dronePathColor}
       />
+  
   </Canvas>
   );
 };
 
-Egypt.propTypes = {
+City.propTypes = {
   droneRef: PropTypes.object.isRequired, // Define the prop type
   mouseControlEnabled: PropTypes.bool,
   measurementViewEnabled:  PropTypes.bool,
 };
 
-export default Egypt;
+export default City;
