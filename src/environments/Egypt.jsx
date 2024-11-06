@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
+
 import { Canvas, useThree } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei';
+import { OrbitControls, Environment,useGLTF } from '@react-three/drei';
 import { useRef, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
@@ -16,8 +17,6 @@ let lastPosition = null;
 let measurementLineColor = "white";
 let measurementPinColor = "black";
 let dronePathColor = "yellow"
-let launchPadColor = "white"
-let planeColor="lightgreen"
 let measurementTextColor="black"
 
 const CameraController = ({ measurementViewEnabled }) => {
@@ -27,8 +26,8 @@ const CameraController = ({ measurementViewEnabled }) => {
   useEffect(() => {
     if (measurementViewEnabled) {
       // Move camera to top-down view
-      camera.position.set(0, 10, 0); // should be (0, 100, 0)
-      camera.lookAt(new THREE.Vector3(0, 5, 0));
+      camera.position.set(5, 25, 0); // should be (0, 100, 0)
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
       if (controlsRef.current) {
@@ -64,7 +63,7 @@ const CameraController = ({ measurementViewEnabled }) => {
 const Pin = ({ position }) => {
   return (
     <mesh position={position}>
-      <sphereGeometry args={[0.1, 4, 4]} />
+      <sphereGeometry args={[0.5, 16, 16]} />
       <meshStandardMaterial color={measurementPinColor} />
     </mesh>
   );
@@ -80,8 +79,8 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(vector, GlobalCamera);
 
-    // Intersect the scene
-    const intersections = raycaster.intersectObject(GlobalScene, true);
+    // Intersect the city model instead of all buildings
+    const intersections = raycaster.intersectObject(GlobalScene, true); // true for recursive
 
     if (intersections.length > 0) {
       const point = intersections[0].point; // Get the intersection point
@@ -90,33 +89,34 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       if (lastPosition == null) {
         lastPosition = droneRef.current.position.clone(); // Clone to avoid reference issues
       }
+      const distance = lastPosition.distanceTo(point);
 
-      // Prepare the coordinates text
+      // Draw a line from the drone to the intersection point
       const points = [lastPosition, point];
       const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
       const lineMaterial = new THREE.LineBasicMaterial({ color: measurementLineColor });
       const line = new THREE.Line(lineGeometry, lineMaterial);
       GlobalScene.add(line);
-      lastPosition.copy(point);
-      const coordinatesText = `X: ${point.x.toFixed(2)}, Y: ${point.y.toFixed(2)}, Z: ${point.z.toFixed(2)}`;
-      
-      // Display the coordinates at the intersection point
-      displayCoordinatesText(coordinatesText, point);
+      lastPosition.copy(point); // Update lastPosition to the current intersection point
+
+      // Display the distance near the point
+      displayCoordinatesText(`${distance.toFixed(2)} cm`, point);
     }
   }
 };
+
 
 const displayCoordinatesText = (text, position) => {
   loader.load('/node_modules/three/examples/fonts/helvetiker_regular.typeface.json', (font) => {
     const textGeometry = new TextGeometry(text, {
       font: font,
-      size: 0.1, // Adjust size as needed
-      height: 0.01, // Adjust height
+      size: 0.5, // Adjust size as needed
+      height: 0.09, // Adjust height
       curveSegments: 1,
       bevelEnabled: false,
       bevelThickness: 0.0,
-      bevelSize: 0.02,
-      bevelSegments: 1,
+      bevelSize: 0.03,
+      bevelSegments: 2,
     });
 
     const textMaterial = new THREE.MeshBasicMaterial({ color: measurementTextColor });
@@ -132,51 +132,35 @@ const displayCoordinatesText = (text, position) => {
 
 
 
-const Plane = () => {
-  const planeRef = useRef();
+const Model = () => {
+  const { scene } = useGLTF('assets/models/egypt/environment.glb'); 
+  const modelPosition = [0, -10, 10];
 
-  // Define the size of the plane
-  const planeSize = 11;
+  // Set the desired rotation (in radians)
+  const rotation = [0, Math.PI / 4, 0]; // Example: Rotate 45 degrees around the Y-axis
 
-  return (
-    <>
-    <mesh ref={planeRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
-      <planeGeometry args={[planeSize, planeSize]} />
-      {/* Blackboard effect: dark color and roughness for a matte finish */}
-      <meshStandardMaterial color={planeColor} roughness={0.9} />
-    </mesh>
-
-    {/* Landing pads at the corners of the plane */}
-    <LandingPad position={[-planeSize / 2, -2, -planeSize / 2]} /> {/* Bottom Left */}
-    <LandingPad position={[planeSize / 2,  -2, -planeSize / 2]} />  {/* Bottom Right */}
-    <LandingPad position={[-planeSize / 2, -2, planeSize / 2]} />  {/* Top Left */}
-    <LandingPad position={[planeSize / 2,  -2, planeSize / 2]} />   {/* Top Right */}
-    </>
-  );
+  // Apply rotation directly to the scene
+  scene.rotation.set(rotation[0], rotation[1], rotation[2]);
+  return <primitive object={scene} position={modelPosition} scale={50} />;
 };
 
 
-const LandingPad = ({ position }) => {
-  return (
-    <mesh position={position}>
-      <boxGeometry args={[1, 0.1, 1]} /> {/* Width, Height, Depth */}
-      <meshStandardMaterial color={launchPadColor} />
-    </mesh>
-  );
-};
-
-const Slate = ({droneRef, measurementViewEnabled, mouseControlEnabled}) => {
+const Egypt = ({
+  droneRef,
+  measurementViewEnabled,
+  mouseControlEnabled,
+}) => {
   const controlsRef = useRef();
   const [pins, setPins] = useState([]); // State to track pin positions
   
   return (
   <Canvas 
     shadows 
-    style={{ background: 'gray' }}
-    onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)}>
-      <ambientLight intensity={0.4} color={new THREE.Color(0x000000)} /> {/* Warm light color */}
+    onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)} // Pass click event
+  >
+      <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> {/* Warm light color */}
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
-      <Plane />
+      <Model />
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
@@ -186,18 +170,18 @@ const Slate = ({droneRef, measurementViewEnabled, mouseControlEnabled}) => {
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        cameraOffset={[0, 4, -10]}
-        droneScale={0.1}
+        droneScale={0.5}
+        cameraOffset={[9,6,-3]}
         lineColor={dronePathColor}
       />
   </Canvas>
   );
 };
 
-Slate.propTypes = {
+Egypt.propTypes = {
   droneRef: PropTypes.object.isRequired, // Define the prop type
   mouseControlEnabled: PropTypes.bool,
   measurementViewEnabled:  PropTypes.bool,
 };
 
-export default Slate;
+export default Egypt;
