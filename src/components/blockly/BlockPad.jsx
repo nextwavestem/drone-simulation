@@ -18,9 +18,7 @@ import emitter from '../../config/eventEmmiter.js';
 
 Blockly.setLocale(En);
 
-const BlockPad = ({ 
-  enableMouseControl,
-}) => {
+const BlockPad = () => {
   
   const blocklyDiv = useRef();
   let workspaceRef = useRef();
@@ -37,7 +35,14 @@ const BlockPad = ({
 
   };
 
-  const handleToggleChange = () => { setToggleValue(prevValue => {!prevValue; enableMouseControl(!prevValue)});};
+  const handleToggleChange = () => { 
+    setToggleValue((prevValue) => {
+      const newVal = !prevValue;
+      console.log("value mousecontrolVale to ", newVal);
+      emitter.emit('mouseControlEnabled', newVal);
+      return newVal; 
+    });
+  };
   const clearWorkspace = () => { Blockly.getMainWorkspace().clear(); };
   const reloadPage = () => { location.reload(); }
 
@@ -61,7 +66,7 @@ const BlockPad = ({
 
   const flyForward = (distance, measurement) => {
     console.log("Flying forward");
-    emitter.emit('movePositiveZ', [distance, measurement]); // Emit the event to move the drone forward
+    emitter.emit('commandFlyFoward', [distance, measurement]); 
   };
  
   
@@ -106,8 +111,6 @@ const BlockPad = ({
   );
 };
 
-BlockPad.propTypes = {
-  enableMouseControl: PropTypes.any
-};
+BlockPad.propTypes = {};
 
 export default BlockPad;

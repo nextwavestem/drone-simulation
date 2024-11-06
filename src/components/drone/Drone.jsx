@@ -10,46 +10,99 @@ import { useGLTF, Line } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import React, { useMemo, useRef, useEffect, useState } from "react";
 import emitter from '../../config/eventEmmiter'
+import gsap from 'gsap';
 
-export const Drone = React.forwardRef(({ 
-    setDronePosition,
-    enableMouseControl,
-    enableMeasurement,
-    droneScale,
-    cameraOffset,
-    lineColor
-  }, ref) => {
+export const Drone = React.forwardRef(({
+  mouseControlEnabled,
+  measurementViewEnabled,
+  droneScale,
+  cameraOffset,
+  lineColor
+}, ref) => {
 
-  const keys = useRef({ w: false, a: false, s: false, d: false, u: false, p: false, t: false });
-  const velocity = useRef(new THREE.Vector3(0, 0, 0));
+  const isGameMode = window.location.href.includes('game-mode');
+  const canMoveInArena = isGameMode || mouseControlEnabled;
+  const memoizedDrone = useMemo(() => { return useGLTF('assets/models/drone.glb'); }, []);
   const droneRef = ref || useRef();
+  const velocity = useRef(new THREE.Vector3(0, 0, 0));
+  const keys = useRef({ w: false, a: false, s: false, d: false, u: false, p: false, t: false });
+  
+  const { camera } = useThree(); 
 
-  const canMoveInArena = enableMouseControl;
+  const [path, setPath] = useState([new THREE.Vector3(0, 0, 0)]); 
+  const [isStalling, setIsStalling] = useState(false);
+
   const DEFAULT_DRONE_SPEED = 0.033333333332
   let droneSpeed = DEFAULT_DRONE_SPEED
 
-  const { camera } = useThree(); 
   
+  // const updateDronePosition = (directionVector, [distance, unit]) => {
+  //   const currentPosition = droneRef.current.position.clone();
+  //   const direction = directionVector.clone().sub(currentPosition).normalize();
+  //   const newPosition = currentPosition.distanceTo(directionVector);
+  //   droneRef.current.position.add(direction.multiplyScalar(newPosition));
+  // };
 
-  const memoizedDrone = useMemo(() => { return useGLTF('assets/models/drone.glb'); }, []);
+  // const droneMovePositiveZ = ([distance, measurement]) => {
+  //   if (droneRef.current) {
+  //     updateDronePosition(
+  //       new THREE.Vector3(
+  //         droneRef.current.position.x, 
+  //         droneRef.current.position.y, 
+  //         droneRef.current.position.z + distance),  
+  //       [distance, measurement]);
+  //   }
+  // };
+
+  const updateDronePosition = (directionVector, [distance, unit]) => {
+    const targetPosition = directionVector.clone();
+    console.log("moving drone from ", distance)
+    // Return a promise to make it async-friendly
+    return new Promise((resolve) => {
+      const animateMove = () => {
+        
+        if (!droneRef.current) return resolve(); // Resolve if droneRef is unavailable
+    
+        const currentPosition = droneRef.current.position.clone();
+        const direction = targetPosition.clone().sub(currentPosition).normalize();
+        
+        // Move drone a small step toward the target
+        const step = droneSpeed; 
+        const newPosition = currentPosition.add(direction.multiplyScalar(step));
+    
+        droneRef.current.position.copy(newPosition);
+        
+        // Continue animating if we haven't reached the target
+        if (newPosition.distanceTo(targetPosition) > step) {
+          requestAnimationFrame(animateMove);
+        } else {
+          resolve(); // Resolve the promise when animation completes
+        }
+      };
   
-  const [path, setPath] = useState([new THREE.Vector3(0, 0, 0)]); 
-
-
-  const movePositiveZ = ([distance, measurement]) => {
+      animateMove();
+    });
+  };
+  
+  const droneMovePositiveZ = async ([distance, measurement]) => {
     if (droneRef.current) {
-      console.log("moving positiveZ with", distance)
-      console.log("moving positiveZ with", measurement)
+      const targetZ = droneRef.current.position.z + distance;
+      await updateDronePosition(
+        new THREE.Vector3(droneRef.current.position.x, droneRef.current.position.y, targetZ),
+        [distance, measurement]
+      );
     }
-  }
-
-
+  };
+  
+  
 
   useEffect(() => {
+    // Register event listener
+    emitter.on('commandFlyFoward', droneMovePositiveZ);
 
-    emitter.on('movePositiveZ', movePositiveZ);
 
 
+    // Keyboard event handlers
     const handleKeyDown = (event) => { keys.current[event.key] = true; };
     const handleKeyUp = (event) => { keys.current[event.key] = false; };
 
@@ -57,13 +110,13 @@ export const Drone = React.forwardRef(({
     window.addEventListener('keyup', handleKeyUp);
 
     return () => {
-      emitter.off('movePositiveZ', movePositiveZ);
+      emitter.off('commandFlyFoward', droneMovePositiveZ);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
+  },[keys]);
 
-  }, [keys]);
-
+  // Update drone movement
   const updateDroneMovement = () => {
     velocity.current.set(0, 0, 0);
     if(!droneRef.current) return
@@ -88,7 +141,7 @@ export const Drone = React.forwardRef(({
     droneRef.current.position.add(velocity.current);
 
     // Update camera to follow drone
-    if (!canMoveInArena && !enableMeasurement) {
+    if (!canMoveInArena && !measurementViewEnabled) {
       const [cameraOffsetX, cameraOffsetY, cameraOffsetZ] = cameraOffset;
       const cameraView = new THREE.Vector3(cameraOffsetX, cameraOffsetY, cameraOffsetZ); // Camera position relative to the drone
       cameraView.applyQuaternion(droneRef.current.quaternion); // Apply the drone's rotation to the camera
@@ -99,19 +152,7 @@ export const Drone = React.forwardRef(({
     // Update the path the drone follows
     const currentPosition = droneRef.current.position.clone();
     setPath((prevPath) => [...prevPath, currentPosition]);
-    
-    if(setDronePosition) {
-      setDronePosition({ 
-      xPos: droneRef.current.position.x, 
-      yPos: droneRef.current.position.y, 
-      zPos: droneRef.current.position.z, 
-      xRot: droneRef.current.rotation.x,
-      yRot: droneRef.current.rotation.y, 
-      zRot: droneRef.current.rotation.z });
-    }
   };
-
- 
 
   useFrame(() => {
     if (!droneRef.current) return;
@@ -121,28 +162,23 @@ export const Drone = React.forwardRef(({
   return (
     <>
       <mesh ref={droneRef}>
-        <primitive 
-          object={memoizedDrone.scene} 
-          position={[0, 0, 0]} 
-          scale={droneScale} 
-          rotation={[0, 0, 0]} 
+        <primitive
+          object={memoizedDrone.scene}
+          position={[0, 0, 0]}
+          scale={droneScale}
         />
       </mesh>
-      <Line
-        points={path} 
-        color={lineColor} 
-        lineWidth={3} 
-      />
+      <Line points={path} color={lineColor} lineWidth={3} />
     </>
   );
 });
 
 Drone.propTypes = {
-  enableMouseControl: PropTypes.any,
-  setDronePosition: PropTypes.func,
-  controlsRef: PropTypes.any,
-  enableMeasurement: PropTypes.any,
-  droneScale: PropTypes.any,
-  cameraOffset: PropTypes.any,
-  lineColor: PropTypes.any
+  mouseControlEnabled: PropTypes.bool,
+  measurementViewEnabled: PropTypes.bool,
+  droneScale: PropTypes.number,
+  cameraOffset: PropTypes.arrayOf(PropTypes.number),
+  lineColor: PropTypes.string,
 };
+
+export default Drone;
