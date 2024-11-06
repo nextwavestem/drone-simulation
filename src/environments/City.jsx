@@ -158,7 +158,7 @@ const City = ({
       <CityModel />
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
-      <CameraController enableMeasurement={measurementViewEnabled} />
+      <CameraController measurementViewEnabled={measurementViewEnabled} />
 
       <Drone
         ref={droneRef}
