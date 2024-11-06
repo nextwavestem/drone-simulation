@@ -45,7 +45,7 @@ const DroneSpaceSimulator = () => {
         </div>
         
         <div className="canvas-container">
-        <Toolbar dronePosition={dronePosition} />
+          <Toolbar dronePosition={dronePosition} />
           <GalaxyContainer  droneRef={droneRef} />
         </div>
       </div>

@@ -44,14 +44,14 @@ export const projects = () => {
         //     description1:"In the simulator, users take control of a drone, learning essential flight actions such as takeoff, landing, and maneuvering in three-dimensional space. As they explore a vibrant Egyptian landscape filled with iconic landmarks like the Pyramids of Giza and the Nile River, children can complete tasks that encourage critical thinking and spatial awareness, all while gaining practical knowledge about drone operation and safety.",
         //     description2:"The Egypt Drone Simulator not only fosters creativity and curiosity but also introduces children to the principles of aviation and technology in an engaging way. Set against the backdrop of ancient monuments and bustling markets, this simulator provides a unique blend of play and education, making learning about drones both enjoyable and accessible. With its user-friendly interface and captivating Egyptian environment, this simulator is the perfect platform for young adventurers to take flight!"
         // },
-        // { 
-        //     id: 5, 
-        //     link: "/slate/",
-        //     title: "Slate", 
-        //     image: getImagePrefix("fixtures/slate.jpg"), 
-        //     detail: "Learn how to navigate your drone to draw letters using blockly",
-        //     description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
-        // },
+        { 
+            id: 5, 
+            link: "/slate/",
+            title: "Slate", 
+            image: getImagePrefix("fixtures/slate.jpg"), 
+            detail: "Learn how to navigate your drone to draw letters using blockly",
+            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+        },
     ]
 }
 
