@@ -24,52 +24,49 @@ const BlockPad = () => {
   let workspaceRef = useRef();
 
   const [toggleValue, setToggleValue] = useState(false);
+  const clearWorkspace = () => { Blockly.getMainWorkspace().clear(); };
+  const reloadPage = () => { location.reload(); }
+  const handleToggleChange = () => { 
+    setToggleValue((prevValue) => {
+      const newVal = !prevValue;
+      return newVal; 
+    });
+  };
 
+  const runSimulator = () => {
+    var code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace().current);
+    console.log(code)
+    
+    const interpreter = new Interpreter(code, initInterpreter);
+    const step = () => {
+      if (interpreter.step()) requestAnimationFrame(step); 
+      else console.log("Simulation completed"); 
+  
+    };
+    step(); 
+  };
 
   const initInterpreter = (interpreter, globalObject) => {
     const wrapFunction = (fn) => (arg1, arg2, arg3, arg4) => fn(arg1, arg2 ? arg2.toString() : '', arg3 ? arg3.toString() : '', arg4 ? arg4.toString() : '');
     const alertFunction = (text) => { window.alert(text ? text.toString() : '');};
     
-    interpreter.setProperty(globalObject, 'flyForward',   interpreter.createNativeFunction(wrapFunction(flyForward)));
     interpreter.setProperty(globalObject, 'alert', interpreter.createNativeFunction(alertFunction));
-
+    interpreter.setProperty(globalObject, 'flyForward',   interpreter.createNativeFunction(wrapFunction(flyForward)));
   };
 
-  const handleToggleChange = () => { 
-    setToggleValue((prevValue) => {
-      const newVal = !prevValue;
-      console.log("value mousecontrolVale to ", newVal);
-      emitter.emit('mouseControlEnabled', newVal);
-      return newVal; 
-    });
-  };
-  const clearWorkspace = () => { Blockly.getMainWorkspace().clear(); };
-  const reloadPage = () => { location.reload(); }
-
-  const runSimulator = () => {
-    var code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace().current);
-    console.log(code)
-    const interpreter = new Interpreter(code, initInterpreter);
-
-    const step = () => {
-      if (interpreter.step()) {
-        requestAnimationFrame(step); 
-      } else {
-        console.log("Simulation completed"); 
-      }
-    };
-
-    step(); 
-  };
-
-  
-
-  const flyForward = (distance, measurement) => {
-    console.log("Flying forward");
-    emitter.emit('commandFlyFoward', [distance, measurement]); 
-  };
+  const flyForward = (distance, measurement) => { emitter.emit('commandFlyFoward', [distance, measurement]); };
  
   
+
+
+
+
+
+
+
+
+
+
 
   useEffect(() => {
     const toolbar =  toolbarConfig;
@@ -101,7 +98,7 @@ const BlockPad = () => {
         <ActionButton onClick={reloadPage} title="Reset Simulation" medium>/</ActionButton>
         <label className="toggle-switch">
           <input type="checkbox" checked={toggleValue} onChange={handleToggleChange}/>
-          <span className="slider">Mouse Control</span>
+          <span className="slider"> Mouse Control </span>
         </label>
       </div>
       

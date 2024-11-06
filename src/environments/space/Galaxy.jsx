@@ -28,7 +28,6 @@ const Galaxy = ({ droneRef }) => { // Accept droneRef as a prop
     };
   }, []);
 
-  
   return (
     <>
       <color attach="background" args={['black']} />

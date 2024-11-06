@@ -104,7 +104,6 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
   }
 };
 
-
 const displayCoordinatesText = (text, position) => {
   loader.load('/node_modules/three/examples/fonts/helvetiker_regular.typeface.json', (font) => {
     const textGeometry = new TextGeometry(text, {
@@ -128,8 +127,6 @@ const displayCoordinatesText = (text, position) => {
     console.error('An error occurred loading the font:', error);
   });
 };
-
-
 
 const CityModel = () => {
   // const { scene } = useGLTF('assets/models/egypt/environment.glb'); // Load the GLB model
