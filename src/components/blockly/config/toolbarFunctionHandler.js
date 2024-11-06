@@ -120,15 +120,6 @@ export const toolbarFunctionHandler = () => {
         const y_cordinate = block.getFieldValue('y')
         const z_cordinate = block.getFieldValue('z')
         const unit = block.getFieldValue('UNIT');
-
-        // let fucntionString = ""
-        // if(x_cordinate > 0) fucntionString += `flyRight(${x_cordinate}, '${unit}'); `
-        // if(y_cordinate > 0) fucntionString += `flyUp(${y_cordinate}, '${unit}'); `
-        // if(z_cordinate > 0) fucntionString += `flyForward(${z_cordinate}, '${unit}'); `
-
-        // if(x_cordinate < 0) fucntionString += `flyLeft(${x_cordinate}, '${unit}'); `
-        // if(y_cordinate < 0) fucntionString += `flyDown(${y_cordinate}, '${unit}'); `
-        // if(z_cordinate < 0) fucntionString += `flyBackward(${z_cordinate}, '${unit}'); `
         return `moveTo(${x_cordinate}, ${y_cordinate}, ${z_cordinate});`;
     } 
 
@@ -179,7 +170,7 @@ export const toolbarFunctionHandler = () => {
         return `rotateDrone('ARC_RIGHT', ${degree}, ${distance}, '${unit}'); `;
     } 
 
-    javascriptGenerator.forBlock['land'] = function(block) {
+    javascriptGenerator.forBlock['land'] = function() {
         return `flyDown(-Infinity, 'CM'); `;
     } 
 }

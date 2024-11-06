@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/display-name */
 /* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -8,6 +9,7 @@ import PropTypes from 'prop-types';
 import { useGLTF, Line } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import React, { useMemo, useRef, useEffect, useState } from "react";
+import emitter from '../../config/eventEmmiter'
 
 export const Drone = React.forwardRef(({ 
     setDronePosition,
@@ -18,37 +20,48 @@ export const Drone = React.forwardRef(({
     lineColor
   }, ref) => {
 
-  const canMoveInArena = enableMouseControl;
-  
-  const memoizedDrone = useMemo(() => { return useGLTF('assets/models/drone.glb'); }, []);
-  const droneRef = ref || useRef();
-  const velocity = useRef(new THREE.Vector3(0, 0, 0));
   const keys = useRef({ w: false, a: false, s: false, d: false, u: false, p: false, t: false });
-  const { camera } = useThree(); 
+  const velocity = useRef(new THREE.Vector3(0, 0, 0));
+  const droneRef = ref || useRef();
 
-  const [path, setPath] = useState([new THREE.Vector3(0, 0, 0)]); 
-
+  const canMoveInArena = enableMouseControl;
   const DEFAULT_DRONE_SPEED = 0.033333333332
   let droneSpeed = DEFAULT_DRONE_SPEED
 
+  const { camera } = useThree(); 
+  
+
+  const memoizedDrone = useMemo(() => { return useGLTF('assets/models/drone.glb'); }, []);
+  
+  const [path, setPath] = useState([new THREE.Vector3(0, 0, 0)]); 
+
+
+  const movePositiveZ = ([distance, measurement]) => {
+    if (droneRef.current) {
+      console.log("moving positiveZ with", distance)
+      console.log("moving positiveZ with", measurement)
+    }
+  }
+
+
+
   useEffect(() => {
-    const handleKeyDown = (event) => {
-      keys.current[event.key] = true;
-    };
-    
-    const handleKeyUp = (event) => {
-      keys.current[event.key] = false;
-    };
+
+    emitter.on('movePositiveZ', movePositiveZ);
+
+
+    const handleKeyDown = (event) => { keys.current[event.key] = true; };
+    const handleKeyUp = (event) => { keys.current[event.key] = false; };
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
     return () => {
+      emitter.off('movePositiveZ', movePositiveZ);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
 
-    //intersection check
   }, [keys]);
 
   const updateDroneMovement = () => {
@@ -98,6 +111,7 @@ export const Drone = React.forwardRef(({
     }
   };
 
+ 
 
   useFrame(() => {
     if (!droneRef.current) return;

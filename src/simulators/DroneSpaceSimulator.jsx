@@ -10,14 +10,12 @@ const DroneSpaceSimulator = () => {
     <AppContainer>     
       <div className="simulation-container">
         <div className="blockpad-container">
-          <BlockPad 
-          />
+          <BlockPad />
         </div>
         
         <div className="canvas-container">
         <Toolbar/>
-          <GalaxyContainer 
-          />
+          <GalaxyContainer />
         </div>
       </div>
     </AppContainer>
