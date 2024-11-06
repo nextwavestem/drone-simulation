@@ -1,0 +1,28 @@
+.blockpad-wrapper { 
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Ensure it takes full height */
+}
+  
+.button-bar {
+  height: auto;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #ccc; /* Optional: visual separation */
+  font-family: monospace;
+
+}
+
+  
+.blockly-area {
+  flex-grow: 1; /* Make blockly-area take the remaining space */
+  width: 100%; /* Ensure it stretches horizontally */
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  font-family: monospace;
+
+  overflow: auto; /* Ensure it can scroll if content is too large */
+}
