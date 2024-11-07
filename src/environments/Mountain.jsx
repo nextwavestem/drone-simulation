@@ -25,7 +25,7 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      camera.position.set(0, 150, -1); // Move camera to top-down view
+      camera.position.set(-40, 140, -70); // Move camera to top-down view
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
@@ -132,14 +132,14 @@ const displayCoordinatesText = (text, position) => {
 
 const Model = () => {
   const { scene } = useGLTF('assets/models/mountains/snowy_mountains.glb'); 
-  const modelPosition = [0, -20, 0];
+  const modelPosition = [0, -15, 0];
 
   // Set the desired rotation (in radians)
-  const rotation = [0, 0, 0]; // Example: Rotate 45 degrees around the Y-axis
+  const rotation = [0, 98, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={52} />;
+  return <primitive object={scene} position={modelPosition} scale={80} />;
 };
 
 
@@ -169,7 +169,7 @@ const Egypt = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.3}
+        droneScale={0.2}
         cameraOffset={[0,5,-10]}
         lineColor={dronePathColor}
       />
