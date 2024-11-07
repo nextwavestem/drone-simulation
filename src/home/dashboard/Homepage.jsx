@@ -49,7 +49,8 @@ const HomePage = () => {
     );
 
     if (isValid) {
-      Cookies.set('session_active', 'true', { expires: 1 });
+      const expirationTime = new Date(new Date().getTime() + 4 * 60 * 60 * 1000);
+      Cookies.set('session_active', 'true', { expires: expirationTime });
       setIsAuthenticated(true);
       setLoginModalOpen(false);
     } else {

@@ -61,6 +61,7 @@ const DroneEgyptSimulator = () => {
                 measurementViewEnabled={measurementView}
                 mouseControlEnabled={mouseControl}  />
             </div>
+
           </div>
       </AppContainer>
     );

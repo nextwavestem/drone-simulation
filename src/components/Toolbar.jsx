@@ -33,7 +33,7 @@ export const Toolbar = ({ dronePosition }) => {
         <div className="column">
         <label className="toggle-switch">
           <input type="checkbox" checked={toggleValue} onChange={handleToggleChange}/>
-          <span className="slider">Measurement View</span>
+          <span className="slider"> Measurement View</span>
         </label>
         </div>
       </div>
