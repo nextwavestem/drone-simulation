@@ -45,6 +45,9 @@ export default Blockly.Theme.defineTheme('modern', {
       takeoff_category: {
         colour: COLORS.TAKEOFF
       },
+      camera_category: {
+        colour: COLORS.LAND
+      },
       navigation_category: {
         colour: COLORS.NAVIGATION
       },

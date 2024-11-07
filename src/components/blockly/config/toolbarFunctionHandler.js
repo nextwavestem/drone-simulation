@@ -12,6 +12,11 @@ export const toolbarFunctionHandler = () => {
         return `setWaitTime(${take_off_after_seconds}, true);`;
     }      
 
+    // capture
+    javascriptGenerator.forBlock['capture_image'] = function() {
+        return `captureImage();`;
+    }  
+
     // set_speed
     javascriptGenerator.forBlock['set_speed'] = function(block) {
         const drone_speed = block.getFieldValue('SPEED')

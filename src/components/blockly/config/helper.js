@@ -27,8 +27,3 @@ export const getForLoopContent = (forLoopString) => {
 }
 
   
-// Example usage:
-const forLoopString = "for (var count = 0; count < 6; count++) {\n  flyUp(5, 'CM');flyDown(5, 'CM');flyLeft(5, 'CM');}\n";
-const countValues = getForLoopContent(forLoopString);  
-console.log("Values of count during the loop:", countValues);
-  

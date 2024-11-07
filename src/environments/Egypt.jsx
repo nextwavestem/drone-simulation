@@ -9,6 +9,7 @@ import * as THREE from 'three';
 import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import emitter from '../config/eventEmmiter.js';
 
 const loader = new FontLoader(); 
 let GlobalCamera;
@@ -142,6 +143,31 @@ const Model = () => {
   return <primitive object={scene} position={modelPosition} scale={50} />;
 };
 
+const ScreenshotCapture = () => {
+  const { gl } = useThree();
+
+  const captureImage = () => {
+    const dataUrl = gl.domElement.toDataURL("image/png");
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `egypt_${timestamp}.png`;
+    link.click();
+  };
+
+  useEffect(() => {
+    const handleScreenshotCommand = () => {
+      captureImage();
+    };
+    emitter.on('commandTakeScreenShot', handleScreenshotCommand);
+    return () => {
+      emitter.off('commandTakeScreenShot', handleScreenshotCommand);
+    };
+  }, []);
+
+  return null; 
+};
 
 const Egypt = ({
   droneRef,
@@ -156,7 +182,7 @@ const Egypt = ({
     shadows 
     onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)} // Pass click event
   >
-        <color attach="background" args={['#87CEEB']} /> {/* Set background color */}
+      <color attach="background" args={['#87CEEB']} /> {/* Set background color */}
 
       <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> {/* Warm light color */}
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
@@ -164,7 +190,7 @@ const Egypt = ({
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
-
+      <ScreenshotCapture />
       <Drone
         ref={droneRef}
         controlsRef={controlsRef}

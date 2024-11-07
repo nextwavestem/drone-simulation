@@ -135,9 +135,10 @@ const BlockPad = () => {
     interpreter.setProperty(globalObject, 'setWaitTime',  interpreter.createNativeFunction(wrapFunction(setWaitTime)));
     interpreter.setProperty(globalObject, 'rotateDrone',  interpreter.createNativeFunction(wrapFunction(rotateDrone)));
     interpreter.setProperty(globalObject, 'moveTo',  interpreter.createNativeFunction(wrapFunction(moveTo)));
+    interpreter.setProperty(globalObject, 'captureImage',  interpreter.createNativeFunction(wrapFunction(captureImage)));
   };
 
-
+  const captureImage = () =>{ emitter.emit('commandTakeScreenShot');}
   const flyUp = (distance, measurement) => { emitter.emit('commandFlyUp', [distance, measurement]); };
   const flyForward = (distance, measurement) => { emitter.emit('commandFlyFoward', [distance, measurement]); };
   const setWaitTime = (time, enableFly) => { emitter.emit('commandSetWaitTime', [time, enableFly]); };

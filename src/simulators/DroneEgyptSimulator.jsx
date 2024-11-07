@@ -5,8 +5,7 @@ import emitter from '../config/eventEmmiter.js';
 import Egypt from '../environments/Egypt.jsx';
 
 import BlockPad from '../components/blockly/BlockPad.jsx';
-import "../css/droneSpaceSimulator.css";
-
+import "../css/droneEgyptSimulator.css";
 
 const DroneEgyptSimulator = () => {
   const droneRef = useRef(); // Create a ref for the Drone component

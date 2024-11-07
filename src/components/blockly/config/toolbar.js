@@ -24,6 +24,17 @@ export const toolbarConfig = {
     },
     {
       kind: "category",
+      name: "Camera",
+      categorystyle: 'camera_category',
+      contents: [
+        {
+          kind: "block",
+          type: "capture_image"
+        },
+      ]
+    },
+    {
+      kind: "category",
       name: "Navigation",
       categorystyle: 'navigation_category',
       contents: [
@@ -556,6 +567,18 @@ export const toolbarBlocksDefinitions = (Blockly) => {
       this.setNextStatement(true, null);
       this.setColour(COLORS.TAKEOFF);
       this.setTooltip("Command to take off after a specific number of seconds");
+      this.setHelpUrl("");
+    }
+  };
+
+  Blockly.Blocks['capture_image'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("capture");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(COLORS.TAKEOFF);
+      this.setTooltip("Command to take image");
       this.setHelpUrl("");
     }
   };

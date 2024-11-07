@@ -8,6 +8,7 @@ import * as THREE from 'three';
 import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import emitter from '../config/eventEmmiter.js';
 
 const loader = new FontLoader(); 
 let GlobalCamera;
@@ -134,8 +135,6 @@ const displayCoordinatesText = (text, position) => {
 
 const Plane = () => {
   const planeRef = useRef();
-
-  // Define the size of the plane
   const planeSize = 13;
 
   return (
@@ -165,6 +164,32 @@ const LandingPad = ({ position }) => {
   );
 };
 
+const ScreenshotCapture = () => {
+  const { gl } = useThree();
+
+  const captureImage = () => {
+    const dataUrl = gl.domElement.toDataURL("image/png");
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `slate_${timestamp}.png`;
+    link.click();
+  };
+
+  useEffect(() => {
+    const handleScreenshotCommand = () => {
+      captureImage();
+    };
+    emitter.on('commandTakeScreenShot', handleScreenshotCommand);
+    return () => {
+      emitter.off('commandTakeScreenShot', handleScreenshotCommand);
+    };
+  }, []);
+
+  return null; 
+};
+
 const Slate = ({
   droneRef,
   measurementViewEnabled,
@@ -184,7 +209,7 @@ const Slate = ({
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
-
+      <ScreenshotCapture />
       <Drone
         ref={droneRef}
         controlsRef={controlsRef}

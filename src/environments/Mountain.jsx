@@ -9,6 +9,7 @@ import * as THREE from 'three';
 import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import emitter from '../config/eventEmmiter.js';
 
 const loader = new FontLoader(); 
 let GlobalCamera;
@@ -128,8 +129,6 @@ const displayCoordinatesText = (text, position) => {
   });
 };
 
-
-
 const Model = () => {
   const { scene } = useGLTF('assets/models/mountains/snowy_mountains.glb'); 
   const modelPosition = [0, -15, 0];
@@ -140,6 +139,32 @@ const Model = () => {
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
   return <primitive object={scene} position={modelPosition} scale={80} />;
+};
+
+const ScreenshotCapture = () => {
+  const { gl } = useThree();
+
+  const captureImage = () => {
+    const dataUrl = gl.domElement.toDataURL("image/png");
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `mountain_${timestamp}.png`;
+    link.click();
+  };
+
+  useEffect(() => {
+    const handleScreenshotCommand = () => {
+      captureImage();
+    };
+    emitter.on('commandTakeScreenShot', handleScreenshotCommand);
+    return () => {
+      emitter.off('commandTakeScreenShot', handleScreenshotCommand);
+    };
+  }, []);
+
+  return null; 
 };
 
 
@@ -163,6 +188,7 @@ const Egypt = ({
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
+      <ScreenshotCapture />
 
       <Drone
         ref={droneRef}
