@@ -107,6 +107,10 @@ const HomePage = () => {
           </div>
         ))}
       </div>
+
+      <footer className="footer">
+         &copy;tanknology
+      </footer>
     </div>
   );
 };

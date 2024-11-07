@@ -25,7 +25,7 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      camera.position.set(5, 100, -3); // Move camera to top-down view
+      camera.position.set(0, 150, -1); // Move camera to top-down view
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
@@ -131,15 +131,15 @@ const displayCoordinatesText = (text, position) => {
 
 
 const Model = () => {
-  const { scene } = useGLTF('assets/models/egypt/environment.glb'); 
-  const modelPosition = [10, -10, 0];
+  const { scene } = useGLTF('assets/models/mountains/snowy_mountains.glb'); 
+  const modelPosition = [0, -20, 0];
 
   // Set the desired rotation (in radians)
-  const rotation = [0, 240, 0]; // Example: Rotate 45 degrees around the Y-axis
+  const rotation = [0, 0, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={50} />;
+  return <primitive object={scene} position={modelPosition} scale={52} />;
 };
 
 
@@ -156,9 +156,8 @@ const Egypt = ({
     shadows 
     onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)} // Pass click event
   >
-        <color attach="background" args={['#87CEEB']} /> {/* Set background color */}
-
-      <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> {/* Warm light color */}
+      <color attach="background" args={['#d7d4d4']} /> {/* Set background color */}
+      <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> Warm light color
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
       <Model />
 
@@ -171,7 +170,7 @@ const Egypt = ({
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
         droneScale={0.3}
-        cameraOffset={[0,20,-18]}
+        cameraOffset={[0,5,-10]}
         lineColor={dronePathColor}
       />
   </Canvas>
