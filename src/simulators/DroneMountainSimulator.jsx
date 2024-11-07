@@ -25,7 +25,6 @@ const DroneMountainSimulator = () => {
     const setMeasurementViewValue = (value) => { setMeasurementView(value); };
     const setMouseControlValue = (value) => { setMouseControl(value); };
 
-    
     emitter.on('measurementViewEnabled', setMeasurementViewValue);
     emitter.on('mouseControlEnabled', setMouseControlValue);
 

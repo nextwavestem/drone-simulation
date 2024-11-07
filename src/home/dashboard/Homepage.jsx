@@ -16,10 +16,7 @@ const HomePage = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [loginFields, setLoginFields] = useState({
-    schoolName: '',
-    accessCode: '',
-    instructorName: '',
-    gradeLevel: ''
+    accessCode: ''
   });
 
   const navigate = useNavigate();
@@ -48,10 +45,7 @@ const HomePage = () => {
 
   const validateLogin = () => {
     const isValid = validCredentials.some(combination =>
-      combination.schoolName === loginFields.schoolName &&
-      combination.accessCode === loginFields.accessCode &&
-      combination.instructorName === loginFields.instructorName &&
-      combination.gradeLevel === loginFields.gradeLevel
+      combination.accessCode === loginFields.accessCode 
     );
 
     if (isValid) {

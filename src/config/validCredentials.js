@@ -1,20 +1,8 @@
 export const validCredentials = [
     {
-      schoolName: 'a',
-      accessCode: 'a',
-      instructorName: 'a',
-      gradeLevel: 'a'
+      accessCode: 'testUser2024'
     },
     {
-      schoolName: 'b',
-      accessCode: 'b',
-      instructorName: 'b',
-      gradeLevel: 'b'
-    },
-    {
-      schoolName: 'c',
-      accessCode: 'c',
-      instructorName: 'c',
-      gradeLevel: 'c'
+      accessCode: 'November2024',
     }
 ];
