@@ -309,13 +309,12 @@ export const Drone = React.forwardRef(({
 
     droneRef.current.position.add(velocity.current);
 
-    // Update camera to follow drone
-    if (!mouseControlEnabled) {
+    if (!mouseControlEnabled && !measurementViewEnabled) {
       const [cameraOffsetX, cameraOffsetY, cameraOffsetZ] = cameraOffset;
-      const cameraView = new THREE.Vector3(cameraOffsetX, cameraOffsetY, cameraOffsetZ); // Camera position relative to the drone
-      cameraView.applyQuaternion(droneRef.current.quaternion); // Apply the drone's rotation to the camera
+      const cameraView = new THREE.Vector3(cameraOffsetX, cameraOffsetY, cameraOffsetZ); 
+      cameraView.applyQuaternion(droneRef.current.quaternion); 
       camera.position.copy(droneRef.current.position.clone().add(cameraView));
-      camera.lookAt(droneRef.current.position); // Ensure the camera keeps looking at the drone
+      camera.lookAt(droneRef.current.position);
     }
 
     // Update the path the drone follows

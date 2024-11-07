@@ -100,17 +100,16 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       lastPosition.copy(point);
       const coordinatesText = `X: ${point.x.toFixed(2)}, Y: ${point.y.toFixed(2)}, Z: ${point.z.toFixed(2)}`;
       
-      // Display the coordinates at the intersection point
       displayCoordinatesText(coordinatesText, point);
     }
   }
 };
 
 const displayCoordinatesText = (text, position) => {
-  loader.load('/node_modules/three/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+  loader.load('assets/helvetiker_regular.typeface.json', (font) => {
     const textGeometry = new TextGeometry(text, {
       font: font,
-      size: 0.1, // Adjust size as needed
+      size: 0.2, // Adjust size as needed
       height: 0.01, // Adjust height
       curveSegments: 1,
       bevelEnabled: false,
@@ -119,9 +118,10 @@ const displayCoordinatesText = (text, position) => {
       bevelSegments: 1,
     });
 
-    const textMaterial = new THREE.MeshBasicMaterial({ color: measurementTextColor });
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-    textMesh.position.set(position.x, position.y + 0.4, position.z); // Adjust Y position slightly above the line point
+    console.log(position)
+    textMesh.position.set(position.x, position.y + 1, position.z); // Adjust Y position slightly above the line point
     textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
 
     GlobalScene.add(textMesh); // Add the text mesh to the scene
@@ -191,7 +191,7 @@ const Slate = ({
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
         cameraOffset={[0, 6, -5]}
-        droneScale={0.2}
+        droneScale={0.1}
         lineColor={dronePathColor}
       />
   </Canvas>

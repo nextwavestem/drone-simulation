@@ -106,7 +106,7 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
 };
 
 const displayCoordinatesText = (text, position) => {
-  loader.load('/node_modules/three/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+  loader.load('assets/helvetiker_regular.typeface.json', (font) => {
     const textGeometry = new TextGeometry(text, {
       font: font,
       size: 0.5, // Adjust size as needed
