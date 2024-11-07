@@ -32,8 +32,7 @@ export const Drone = React.forwardRef(({
   lineColor
 }, ref) => {
 
-  const isGameMode = window.location.href.includes('game-mode');
-  const canMoveInArena = isGameMode || mouseControlEnabled;
+  const canMoveInArena = mouseControlEnabled;
   const memoizedDrone = useMemo(() => { return useGLTF('assets/models/drone.glb'); }, []);
   const droneRef = ref || useRef();
   const velocity = useRef(new THREE.Vector3(0, 0, 0));
@@ -311,7 +310,7 @@ export const Drone = React.forwardRef(({
     droneRef.current.position.add(velocity.current);
 
     // Update camera to follow drone
-    if (!canMoveInArena && !measurementViewEnabled) {
+    if (!mouseControlEnabled) {
       const [cameraOffsetX, cameraOffsetY, cameraOffsetZ] = cameraOffset;
       const cameraView = new THREE.Vector3(cameraOffsetX, cameraOffsetY, cameraOffsetZ); // Camera position relative to the drone
       cameraView.applyQuaternion(droneRef.current.quaternion); // Apply the drone's rotation to the camera

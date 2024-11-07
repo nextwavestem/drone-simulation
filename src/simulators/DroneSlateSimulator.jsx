@@ -6,7 +6,6 @@ import { useRef, useState, useEffect } from 'react';
 import {Toolbar} from '../components/Toolbar.jsx'
 import emitter from '../config/eventEmmiter.js';
 
-
 const DroneSlateSimulator = () => {
   const droneRef = useRef(); // Create a ref for the Drone component
   const [measurementView, setMeasurementView] = useState(false);
@@ -23,7 +22,10 @@ const DroneSlateSimulator = () => {
 
   useEffect(() => {
     const setMeasurementViewValue = (value) => { setMeasurementView(value); };
-    const setMouseControlValue = (value) => { setMouseControl(value); };
+    const setMouseControlValue = (value) => { 
+      console.log(value)
+      setMouseControl(value); 
+    };
 
     
     emitter.on('measurementViewEnabled', setMeasurementViewValue);
@@ -56,7 +58,6 @@ const DroneSlateSimulator = () => {
             
             <div className="canvas-container">
               <Toolbar dronePosition={dronePosition} />
-
               <Slate 
                 droneRef={droneRef} 
                 measurementViewEnabled={measurementView}

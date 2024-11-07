@@ -29,6 +29,7 @@ const BlockPad = () => {
   const handleToggleChange = () => { 
     setToggleValue((prevValue) => {
       const newVal = !prevValue;
+      emitter.emit('mouseControlEnabled', newVal);
       return newVal; 
     });
   };

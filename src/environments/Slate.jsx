@@ -136,7 +136,7 @@ const Plane = () => {
   const planeRef = useRef();
 
   // Define the size of the plane
-  const planeSize = 11;
+  const planeSize = 13;
 
   return (
     <>
@@ -159,23 +159,27 @@ const Plane = () => {
 const LandingPad = ({ position }) => {
   return (
     <mesh position={position}>
-      <boxGeometry args={[1, 0.1, 1]} /> {/* Width, Height, Depth */}
+      <boxGeometry args={[1, 0.1, 1]} /> 
       <meshStandardMaterial color={launchPadColor} />
     </mesh>
   );
 };
 
-const Slate = ({droneRef, measurementViewEnabled, mouseControlEnabled}) => {
+const Slate = ({
+  droneRef,
+  measurementViewEnabled,
+  mouseControlEnabled,
+}) => {
   const controlsRef = useRef();
-  const [pins, setPins] = useState([]); // State to track pin positions
+  const [pins, setPins] = useState([]);
   
   return (
   <Canvas 
     shadows 
     style={{ background: 'gray' }}
     onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)}>
-      <ambientLight intensity={0.4} color={new THREE.Color(0x000000)} /> {/* Warm light color */}
-      <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
+      <ambientLight intensity={0.4} color={new THREE.Color(0x000000)} />
+      <Environment preset="sunset" intensity={0.5} />
       <Plane />
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
@@ -186,8 +190,8 @@ const Slate = ({droneRef, measurementViewEnabled, mouseControlEnabled}) => {
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        cameraOffset={[0, 4, -10]}
-        droneScale={0.1}
+        cameraOffset={[0, 6, -5]}
+        droneScale={0.2}
         lineColor={dronePathColor}
       />
   </Canvas>
