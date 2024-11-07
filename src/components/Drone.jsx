@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { useGLTF, Line } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import React, { useMemo, useRef, useEffect, useState } from "react";
-import emitter from '../../config/eventEmmiter'
+import emitter from '../config/eventEmmiter'
 import gsap from 'gsap';
 
 const DISTANCE_INCHES_OFFSET = 2.54;

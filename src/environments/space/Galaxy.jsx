@@ -4,7 +4,7 @@ import { OrbitControls, Stars } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { Earth }  from './Earth'
 import { Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Sun } from './Planets';
-import { Drone } from '../../components/drone/Drone.jsx';
+import { Drone } from '../../components/Drone.jsx';
 import PropTypes from 'prop-types';
 import emitter from '../../config/eventEmmiter.js';
 

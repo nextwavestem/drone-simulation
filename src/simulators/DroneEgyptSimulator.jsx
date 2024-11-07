@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import {Toolbar} from '../components/Toolbar.jsx'
 import emitter from '../config/eventEmmiter.js';
 import Egypt from '../environments/Egypt.jsx';
+
 import BlockPad from '../components/blockly/BlockPad.jsx';
 import "../css/droneSpaceSimulator.css";
 
@@ -54,14 +55,13 @@ const DroneEgyptSimulator = () => {
               <BlockPad/>
             </div>
             
-            <div className="canvas-container">
+            <div className="egypt-canvas-container">
               <Toolbar dronePosition={dronePosition} />
               <Egypt 
                 droneRef={droneRef} 
                 measurementViewEnabled={measurementView}
-                mouseControlEnabled={mouseControl}  />
+                mouseControlEnabled={mouseControl} />
             </div>
-
           </div>
       </AppContainer>
     );

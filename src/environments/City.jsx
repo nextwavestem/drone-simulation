@@ -5,7 +5,7 @@ import { OrbitControls,  Environment,useGLTF } from '@react-three/drei';
 import { useRef, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
-import { Drone } from '../components/drone/Drone.jsx';
+import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 
