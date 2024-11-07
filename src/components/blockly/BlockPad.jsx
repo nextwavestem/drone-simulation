@@ -36,15 +36,25 @@ const BlockPad = () => {
 
   const runSimulator = () => {
     var code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace().current);
-    console.log(code)
+    const arrayCommands = code.split(";")
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const runLoop = async (iterations) => {
+      for (let i = 0; i < iterations; i++) {
+        const command = arrayCommands[i]
+        console.log(command)
     
-    const interpreter = new Interpreter(code, initInterpreter);
-    const step = () => {
-      if (interpreter.step()) requestAnimationFrame(step); 
-      else console.log("Simulation completed"); 
-  
+        const interpreter = new Interpreter(command, initInterpreter);
+        const step = () => {
+          if (interpreter.step()) requestAnimationFrame(step); 
+          else console.log("Simulation completed"); 
+      
+        };
+        step(); 
+        await delay(5000);
+      }
+      console.log("Mission Completed");
     };
-    step(); 
+    runLoop(arrayCommands.length); 
   };
 
   const initInterpreter = (interpreter, globalObject) => {
