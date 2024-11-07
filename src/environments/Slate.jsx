@@ -118,7 +118,7 @@ const displayCoordinatesText = (text, position) => {
       bevelSegments: 1,
     });
 
-    const textMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
+    const textMaterial = new THREE.MeshBasicMaterial({ color: measurementTextColor });
     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
     console.log(position)
     textMesh.position.set(position.x, position.y + 1, position.z); // Adjust Y position slightly above the line point

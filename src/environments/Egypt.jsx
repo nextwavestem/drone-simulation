@@ -25,8 +25,7 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      // Move camera to top-down view
-      camera.position.set(5, 25, 0); // should be (0, 100, 0)
+      camera.position.set(5, 100, -3); // Move camera to top-down view
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
@@ -109,7 +108,7 @@ const displayCoordinatesText = (text, position) => {
   loader.load('assets/helvetiker_regular.typeface.json', (font) => {
     const textGeometry = new TextGeometry(text, {
       font: font,
-      size: 0.5, // Adjust size as needed
+      size: 0.9, // Adjust size as needed
       height: 0.09, // Adjust height
       curveSegments: 1,
       bevelEnabled: false,
@@ -133,10 +132,10 @@ const displayCoordinatesText = (text, position) => {
 
 const Model = () => {
   const { scene } = useGLTF('assets/models/egypt/environment.glb'); 
-  const modelPosition = [0, -10, 10];
+  const modelPosition = [10, -10, 0];
 
   // Set the desired rotation (in radians)
-  const rotation = [0, Math.PI / 4, 0]; // Example: Rotate 45 degrees around the Y-axis
+  const rotation = [0, 240, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
@@ -157,6 +156,8 @@ const Egypt = ({
     shadows 
     onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)} // Pass click event
   >
+        <color attach="background" args={['#87CEEB']} /> {/* Set background color */}
+
       <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> {/* Warm light color */}
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
       <Model />
@@ -169,8 +170,8 @@ const Egypt = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.5}
-        cameraOffset={[9,6,-3]}
+        droneScale={0.4}
+        cameraOffset={[0,20,-18]}
         lineColor={dronePathColor}
       />
   </Canvas>
