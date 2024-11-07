@@ -15,6 +15,7 @@ import  Theme  from './config/theme.js';
 import "../../css/blockpad.css";
 import Interpreter from 'js-interpreter';
 import emitter from '../../config/eventEmmiter.js';
+import  { getForLoopContent, isIfStatement, isForLoop }  from './config/helper.js';
 
 Blockly.setLocale(En);
 
@@ -34,8 +35,55 @@ const BlockPad = () => {
     });
   };
 
-  const runSimulator = () => {
+  const runPlainSimulator = () => {
     var code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace().current);
+    console.log(code)
+
+    const interpreter = new Interpreter(code, initInterpreter);
+    const step = () => {
+      if (interpreter.step()) requestAnimationFrame(step); 
+      else console.log("Simulation completed"); 
+
+    };
+    step(); 
+  };
+
+  const runForSimulator = () => {
+    const code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace().current);
+    const loop = getForLoopContent(code); 
+
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const runCommands = async (commands) => {
+        for (const command of commands) {
+            console.log(`Executing command: ${command.trim()}`);
+            
+            const interpreter = new Interpreter(command, initInterpreter);
+            const step = () => {
+                if (interpreter.step()) {
+                    requestAnimationFrame(step);
+                } else {
+                    console.log("Command execution completed");
+                }
+            };
+            step();
+            await delay(5000);
+        }
+    };
+
+    const runLoop = async (iterations, commands) => {
+        for (let i = 0; i < iterations; i++) {
+          console.log(`Iteration ${i + 1} of ${iterations}`);
+          await runCommands(commands);
+        }
+        console.log("Mission Completed");
+    };
+
+    const arrayCommands = loop.content.split(";").map(cmd => cmd.trim()).filter(cmd => cmd); // Remove empty commands
+    runLoop(loop.count, arrayCommands);
+};
+
+
+  const runBasicSimulator = (code) => {
     const arrayCommands = code.split(";")
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     const runLoop = async (iterations) => {
@@ -55,6 +103,20 @@ const BlockPad = () => {
       console.log("Mission Completed");
     };
     runLoop(arrayCommands.length); 
+  };
+
+  const runSimulator = () => {
+    var code = javascriptGenerator.workspaceToCode(Blockly.getMainWorkspace().current);
+
+    if(isIfStatement(code)) {
+      runPlainSimulator()
+    } 
+    else if (isForLoop(code)) {
+      runForSimulator();
+    }
+    else {
+      runBasicSimulator(code)
+    }
   };
 
   const initInterpreter = (interpreter, globalObject) => {
