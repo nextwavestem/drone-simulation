@@ -130,7 +130,7 @@ const displayCoordinatesText = (text, position) => {
 
 const CityModel = () => {
   // const { scene } = useGLTF('assets/models/egypt/environment.glb'); // Load the GLB model
-  const { scene } = useGLTF('assets/models/city/city/city.glb'); // Load the GLB model
+  const { scene } = useGLTF('assets/models/city/city_3d_model.glb'); // Load the GLB model
   const modelPosition = [0, -10, 3]; // Set your desired position (x, y, z)
   const rotation = [0, -Math.PI / 4, 0];
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
