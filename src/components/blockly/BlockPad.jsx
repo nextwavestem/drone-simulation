@@ -47,25 +47,34 @@ const BlockPad = () => {
   };
 
   const initInterpreter = (interpreter, globalObject) => {
-    const wrapFunction = (fn) => (arg1, arg2, arg3, arg4) => fn(arg1, arg2 ? arg2.toString() : '', arg3 ? arg3.toString() : '', arg4 ? arg4.toString() : '');
+    const wrapFunction = (fn) => (arg1, arg2, arg3, arg4) => fn(arg1, arg2, arg3, arg4);
     const alertFunction = (text) => { window.alert(text ? text.toString() : '');};
     
     interpreter.setProperty(globalObject, 'alert', interpreter.createNativeFunction(alertFunction));
+
     interpreter.setProperty(globalObject, 'flyForward',   interpreter.createNativeFunction(wrapFunction(flyForward)));
+    interpreter.setProperty(globalObject, 'flyBackward',  interpreter.createNativeFunction(wrapFunction(flyBackward)));
+    interpreter.setProperty(globalObject, 'flyDown', interpreter.createNativeFunction(wrapFunction(flyDown)));
+    interpreter.setProperty(globalObject, 'flyUp',   interpreter.createNativeFunction(wrapFunction(flyUp)));
+    interpreter.setProperty(globalObject, 'flyLeft',   interpreter.createNativeFunction(wrapFunction(flyLeft)));
+    interpreter.setProperty(globalObject, 'flyRight',  interpreter.createNativeFunction(wrapFunction(flyRight)));
+    interpreter.setProperty(globalObject, 'setSpeed',   interpreter.createNativeFunction(wrapFunction(setSpeed)));
+    interpreter.setProperty(globalObject, 'setWaitTime',  interpreter.createNativeFunction(wrapFunction(setWaitTime)));
+    interpreter.setProperty(globalObject, 'rotateDrone',  interpreter.createNativeFunction(wrapFunction(rotateDrone)));
+    interpreter.setProperty(globalObject, 'moveTo',  interpreter.createNativeFunction(wrapFunction(moveTo)));
   };
 
+
+  const flyUp = (distance, measurement) => { emitter.emit('commandFlyUp', [distance, measurement]); };
   const flyForward = (distance, measurement) => { emitter.emit('commandFlyFoward', [distance, measurement]); };
- 
-  
-
-
-
-
-
-
-
-
-
+  const setWaitTime = (time, enableFly) => { emitter.emit('commandSetWaitTime', [time, enableFly]); };
+  const setSpeed = (speed) => { emitter.emit('commandSetSpeed', [speed]); };
+  const flyBackward = (distance, measurement) => { emitter.emit('commandFlyBackward', [distance, measurement]); };
+  const flyLeft = (distance, measurement) => { emitter.emit('commandFlyLeft', [distance, measurement]); };
+  const flyRight = (distance, measurement) => { emitter.emit('commandFlyRight', [distance, measurement]); };
+  const flyDown = (distance, measurement) => { emitter.emit('commandFlyDown', [distance, measurement]); };
+  const moveTo = (x, y, z, unit) => { emitter.emit('commandFlyTo', [x, y, z, unit]); };
+  const rotateDrone = (direction, degree, distance, unit) => { emitter.emit('commandRotate', [direction, degree, distance, unit]); };
 
 
   useEffect(() => {

@@ -120,7 +120,7 @@ export const toolbarFunctionHandler = () => {
         const y_cordinate = block.getFieldValue('y')
         const z_cordinate = block.getFieldValue('z')
         const unit = block.getFieldValue('UNIT');
-        return `moveTo(${x_cordinate}, ${y_cordinate}, ${z_cordinate});`;
+        return `moveTo(${x_cordinate}, ${y_cordinate}, ${z_cordinate}, '${unit}');`;
     } 
 
     // direction, degree, radius, unit 
