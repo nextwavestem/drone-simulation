@@ -98,7 +98,7 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       const line = new THREE.Line(lineGeometry, lineMaterial);
       GlobalScene.add(line);
       lastPosition.copy(point);
-      const coordinatesText = `X: ${point.x.toFixed(2)}, Y: ${point.y.toFixed(2)}, Z: ${point.z.toFixed(2)}`;
+      const coordinatesText = `X: ${point.x.toFixed(2)} cm, Y: ${point.y.toFixed(2)} cm, Z: ${point.z.toFixed(2)} cm`;
       
       displayCoordinatesText(coordinatesText, point);
     }

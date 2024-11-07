@@ -119,7 +119,7 @@ const displayCoordinatesText = (text, position) => {
 
     const textMaterial = new THREE.MeshBasicMaterial({ color: measurementTextColor });
     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-    textMesh.position.set(position.x, position.y + 0.4, position.z); // Adjust Y position slightly above the line point
+    textMesh.position.set(position.x, position.y + 2, position.z); // Adjust Y position slightly above the line point
     textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
 
     GlobalScene.add(textMesh); // Add the text mesh to the scene
@@ -131,10 +131,10 @@ const displayCoordinatesText = (text, position) => {
 const CityModel = () => {
   // const { scene } = useGLTF('assets/models/egypt/environment.glb'); // Load the GLB model
   const { scene } = useGLTF('assets/models/city/city_3d_model.glb'); // Load the GLB model
-  const modelPosition = [0, -10, 3]; // Set your desired position (x, y, z)
-  const rotation = [0, -Math.PI / 4, 0];
+  const modelPosition = [4.2, -0.84, 0]; // Set your desired position (x, y, z)
+  const rotation = [0, 14.1, 0];
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={2}/>;
+  return <primitive object={scene} position={modelPosition} scale={3}/>;
 };
 
 const City = ({
@@ -162,8 +162,8 @@ const City = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.2}
-        cameraOffset={[1, 8, -10]}
+        droneScale={0.01}
+        cameraOffset={[0.01, 0.2, -0.5]}
         lineColor={dronePathColor}
       />
   
