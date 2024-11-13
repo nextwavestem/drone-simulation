@@ -12,7 +12,7 @@ import React, { useMemo, useRef, useEffect, useState } from "react";
 import emitter from '../config/eventEmmiter'
 import gsap from 'gsap';
 
-const DISTANCE_INCHES_OFFSET = 0.393701;
+const DISTANCE_INCHES_OFFSET = 2.54;
 const NEGATIVE_OFFSET = 1;
 
 const CIRCLE_RIGHT = 'CIRCLE_RIGHT';
