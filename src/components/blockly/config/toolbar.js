@@ -649,6 +649,8 @@ export const toolbarBlocksDefinitions = (Blockly) => {
         .appendField("fly backward")
         .appendField(new Blockly.FieldNumber(0, 0, null), "DISTANCE") // Add FieldNumber
         .appendField(new Blockly.FieldDropdown([["inches", "INCHES"], ["cm", "CM"]]), "UNIT"); // Add Dropdown on the same line
+      this.setPreviousStatement(true, null); // Allow chaining with previous block
+      this.setNextStatement(true, null); // Allow chaining with next block
       this.setColour(COLORS.NAVIGATION);
       this.setTooltip("Command to fly backward a certain distance in inches or cm");
       this.setHelpUrl("");
