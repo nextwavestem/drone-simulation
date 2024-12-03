@@ -8,6 +8,8 @@ import "../css/droneSpaceSimulator.css";
 
 
 const DroneMountainSimulator = () => {
+  window.gtag('event', 'page_view', { page_path: window.location.pathname });
+
   const droneRef = useRef(); // Create a ref for the Drone component
   const [measurementView, setMeasurementView] = useState(false);
   const [mouseControl, setMouseControl] = useState(false);

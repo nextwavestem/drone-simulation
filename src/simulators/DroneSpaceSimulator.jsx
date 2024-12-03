@@ -6,6 +6,7 @@ import {Toolbar} from '../components/Toolbar.jsx'
 import { useRef, useState, useEffect } from 'react';
 
 const DroneSpaceSimulator = () => {
+  window.gtag('event', 'page_view', { page_path: window.location.pathname });
 
   const droneRef = useRef(); // Create a ref for the Drone component
   const [dronePosition, setDronePosition] = useState({

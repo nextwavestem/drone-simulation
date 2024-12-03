@@ -7,6 +7,8 @@ import {Toolbar} from '../components/Toolbar.jsx'
 import emitter from '../config/eventEmmiter.js';
 
 const DroneSlateSimulator = () => {
+  window.gtag('event', 'page_view', { page_path: window.location.pathname });
+
   const droneRef = useRef(); // Create a ref for the Drone component
   const [measurementView, setMeasurementView] = useState(false);
   const [mouseControl, setMouseControl] = useState(false);
