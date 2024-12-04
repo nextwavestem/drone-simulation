@@ -23,6 +23,7 @@ const SECONDS = 'SECONDS';
 const INCHES = "INCHES";
 const RIGHT = 'RIGHT';
 const LEFT = 'LEFT';
+const RESET = 'RESET';
 
 export const Drone = React.forwardRef(({
   mouseControlEnabled,
@@ -42,6 +43,7 @@ export const Drone = React.forwardRef(({
 
   const [path, setPath] = useState([new THREE.Vector3(0, 0, 0)]); 
   const [isStalling, setIsStalling] = useState(false);
+  const [isFlipping, setIsFlipping] = useState(false); // State to track flipping status
 
   const DEFAULT_DRONE_SPEED = 0.033333333332
   let droneSpeed = DEFAULT_DRONE_SPEED
@@ -93,7 +95,11 @@ export const Drone = React.forwardRef(({
   };
   
   const droneMoveNegativeY = async ([distance, measurement]) => {
-    if(distance == -Infinity) {
+    if(distance == -Infinity && measurement == "WAIT") {
+      await moveDroneToPosition([droneRef.current.position.x, 0, droneRef.current.position.z, 'CM']); 
+      await droneMovePositiveZ([5, 'CM']); 
+    }
+    else if(distance == -Infinity) {
       await moveDroneToPosition([droneRef.current.position.x, 0, droneRef.current.position.z, 'CM']); 
     } else {
       await moveDroneOnAxis('y', [distance + NEGATIVE_OFFSET, measurement], -1); // Negative direction
@@ -103,6 +109,59 @@ export const Drone = React.forwardRef(({
   const moveToPosition = async (position) => {
     await moveDroneToPosition(position); 
   };
+
+  const flipDrone = async (flipDirection) => {
+    if (!droneRef.current) return;
+    const [direction] = flipDirection;
+    console.log("commanding to flip it", direction);
+  
+    setIsFlipping(true); // Set the flipping state to true
+  
+    const initialRotation = droneRef.current.rotation.clone(); // Clone the initial rotation
+    const fullFlip = Math.PI * 2; // 360 degrees in radians
+  
+    const duration = 1; // Duration of the flip in seconds
+    const framesPerSecond = 60;
+    const totalFrames = duration * framesPerSecond;
+    const increment = fullFlip / totalFrames;
+  
+    let frame = 0;
+  
+    const animateFlip = () => {
+      if (frame < totalFrames) {
+        switch (direction) {
+          case "FORWARD":
+            droneRef.current.rotation.x += increment; // Flip along the X-axis
+            break;
+          case "BACKWARD":
+            droneRef.current.rotation.x -= increment; // Flip along the X-axis in reverse
+            break;
+          case "RIGHT":
+            droneRef.current.rotation.z += increment; // Flip along the Z-axis
+            break;
+          case "LEFT":
+            droneRef.current.rotation.z -= increment; // Flip along the Z-axis in reverse
+            break;
+          default:
+            console.warn("Invalid flip direction");
+            setIsFlipping(false);
+            return;
+        }
+  
+        frame++;
+        requestAnimationFrame(animateFlip);
+      } else {
+        // Reset rotation to prevent overflow and reset flipping state
+        droneRef.current.rotation.copy(initialRotation); // Reset to initial rotation
+        setIsFlipping(false);
+        console.log(`${direction} Flip complete`);
+      }
+    };
+  
+    animateFlip();
+  };
+  
+  
   
   const moveDroneOnAxis = async (axis, [distance, measurement], direction = 1) => {
     if (!droneRef.current) return;
@@ -151,6 +210,10 @@ export const Drone = React.forwardRef(({
   const moveDroneToPosition = async (position) => {
     
     let [newX, newY, newZ, unit] = position;
+
+    if(unit == RESET) {
+      setPath([new THREE.Vector3(0, 0, 0)]);
+    }
 
     // Convert coordinates if the unit is in inches
     if (unit === INCHES) {
@@ -258,7 +321,7 @@ export const Drone = React.forwardRef(({
     
     emitter.on('commandSetWaitTime', stallAndFly);
     emitter.on('commandSetSpeed', updateDroneSpeed);
-
+    emitter.on('commandFlip', flipDrone);
     
     // Keyboard event handlers
     const handleKeyDown = (event) => { keys.current[event.key] = true; };
@@ -278,6 +341,7 @@ export const Drone = React.forwardRef(({
 
       emitter.off('commandSetWaitTime', stallAndFly);
       emitter.off('commandSetSpeed', updateDroneSpeed);
+      emitter.off('commandFlip', flipDrone);
 
 
       window.removeEventListener('keydown', handleKeyDown);
@@ -289,6 +353,11 @@ export const Drone = React.forwardRef(({
   const updateDroneMovement = () => {
     velocity.current.set(0, 0, 0);
     if(!droneRef.current) return
+
+    if (isFlipping) {
+      camera.lookAt(droneRef.current.position);
+      return;
+    }
 
     // Calculate the forward direction based on the drone's current rotation
     const forwardDirection = new THREE.Vector3(0, 0, 1).applyQuaternion(droneRef.current.quaternion); // Apply current drone rotation

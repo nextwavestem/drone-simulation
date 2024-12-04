@@ -136,6 +136,7 @@ const BlockPad = () => {
     interpreter.setProperty(globalObject, 'rotateDrone',  interpreter.createNativeFunction(wrapFunction(rotateDrone)));
     interpreter.setProperty(globalObject, 'moveTo',  interpreter.createNativeFunction(wrapFunction(moveTo)));
     interpreter.setProperty(globalObject, 'captureImage',  interpreter.createNativeFunction(wrapFunction(captureImage)));
+    interpreter.setProperty(globalObject, 'flip',  interpreter.createNativeFunction(wrapFunction(flip)));
   };
 
   const captureImage = () =>{ emitter.emit('commandTakeScreenShot');}
@@ -149,6 +150,7 @@ const BlockPad = () => {
   const flyDown = (distance, measurement) => { emitter.emit('commandFlyDown', [distance, measurement]); };
   const moveTo = (x, y, z, unit) => { emitter.emit('commandFlyTo', [x, y, z, unit]); };
   const rotateDrone = (direction, degree, distance, unit) => { emitter.emit('commandRotate', [direction, degree, distance, unit]); };
+  const flip = (direction) => { emitter.emit('commandFlip', [direction]); };
 
 
   useEffect(() => {

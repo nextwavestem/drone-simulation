@@ -141,6 +141,15 @@ const Model = () => {
   return <primitive object={scene} position={modelPosition} scale={80} />;
 };
 
+const LandingPad = ({ position, size = [2, 0.1, 2], color = "yellow" }) => {
+  return (
+    <mesh position={position}>
+      <boxGeometry args={size} />
+      <meshStandardMaterial color={color} emissive={new THREE.Color(0xffff00)} emissiveIntensity={0.5} />
+    </mesh>
+  );
+};
+
 const ScreenshotCapture = () => {
   const { gl } = useThree();
 
@@ -168,7 +177,7 @@ const ScreenshotCapture = () => {
 };
 
 
-const Egypt = ({
+const Mountain = ({
   droneRef,
   measurementViewEnabled,
   mouseControlEnabled,
@@ -199,14 +208,18 @@ const Egypt = ({
         cameraOffset={[0,5,-10]}
         lineColor={dronePathColor}
       />
+
+      <LandingPad position={[10, -3, 10]} />
+      {/* <LandingPad position={[-15, 0, -5]} />
+      <LandingPad position={[20, 0, -10]} /> */}
   </Canvas>
   );
 };
 
-Egypt.propTypes = {
+Mountain.propTypes = {
   droneRef: PropTypes.object.isRequired, // Define the prop type
   mouseControlEnabled: PropTypes.bool,
   measurementViewEnabled:  PropTypes.bool,
 };
 
-export default Egypt;
+export default Mountain;

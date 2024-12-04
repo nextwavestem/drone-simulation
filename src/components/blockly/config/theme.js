@@ -54,6 +54,9 @@ export default Blockly.Theme.defineTheme('modern', {
       land_category: {
         colour: COLORS.LAND
       },
+      flip_category: {
+        colour: COLORS.FLIP
+      },
       logic_category:{
         colour: COLORS.LOGIC
       },

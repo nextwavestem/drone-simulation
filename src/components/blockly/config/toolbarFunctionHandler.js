@@ -176,7 +176,29 @@ export const toolbarFunctionHandler = () => {
     } 
 
     javascriptGenerator.forBlock['land'] = function() {
-        return `flyDown(-Infinity, 'CM'); `;
+        return `flyDown(-Infinity, 'CM');`;
+    } 
+
+    
+    javascriptGenerator.forBlock['land_for_seconds'] = function() {
+        return `flyDown(-Infinity, 'WAIT');`;
+    }
+    
+    javascriptGenerator.forBlock['flip_left'] = function() {
+        return `flip('LEFT');`;
+    } 
+
+    javascriptGenerator.forBlock['flip_right'] = function() {
+        return `flip('RIGHT');`;
+    } 
+
+    javascriptGenerator.forBlock['flip_forward'] = function() {
+        return `flip('FORWARD');`;
+    } 
+
+    javascriptGenerator.forBlock['flip_backward'] = function() {
+        return `flip('BACKWARD');`;
     } 
 }
+
 

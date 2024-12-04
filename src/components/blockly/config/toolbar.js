@@ -52,15 +52,7 @@ export const toolbarConfig = {
         },
         {
           kind: "block",
-          type: "flying_forward_time"
-        },
-        {
-          kind: "block",
           type: "flying_backward_distance"
-        },
-        {
-          kind: "block",
-          type: "flying_backward_time"
         },
         {
           kind: "block",
@@ -68,15 +60,7 @@ export const toolbarConfig = {
         },
         {
           kind: "block",
-          type: "flying_left_time"
-        },
-        {
-          kind: "block",
           type: "flying_right_distance"
-        },
-        {
-          kind: "block",
-          type: "flying_right_time"
         },
         {
           kind: "block",
@@ -84,15 +68,7 @@ export const toolbarConfig = {
         },
         {
           kind: "block",
-          type: "flying_up_time"
-        },
-        {
-          kind: "block",
           type: "flying_down_distance"
-        },
-        {
-          kind: "block",
-          type: "flying_down_time"
         },
         {
           kind: "block",
@@ -108,19 +84,34 @@ export const toolbarConfig = {
         },
         {
           kind: "block",
-          type: "circle_left"
-        },
-        {
-          kind: "block",
-          type: "circle_right"
-        },
-        {
-          kind: "block",
           type: "yaw_left"
         },
         {
           kind: "block",
           type: "yaw_right"
+        }
+      ]
+    },
+    {
+      kind: "category",
+      name: "Flip",
+      categorystyle: 'flip_category',
+      contents: [
+        {
+          kind: "block",
+          type: "flip_forward"
+        },
+        {
+          kind: "block",
+          type: "flip_backward"
+        },
+        {
+          kind: "block",
+          type: "flip_left"
+        },
+        {
+          kind: "block",
+          type: "flip_right"
         }
       ]
     },
@@ -909,7 +900,51 @@ export const toolbarBlocksDefinitions = (Blockly) => {
       this.setHelpUrl("");
     }
   };
+
+  Blockly.Blocks['flip_left'] = {
+    init: function() {
+      this.appendDummyInput().appendField("flip left");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(COLORS.FLIP);
+      this.setTooltip("Command to flip left");
+      this.setHelpUrl("");
+    }
+  };
+
+  Blockly.Blocks['flip_right'] = {
+    init: function() {
+      this.appendDummyInput().appendField("flip right");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(COLORS.FLIP);
+      this.setTooltip("Command to flip right");
+      this.setHelpUrl("");
+    }
+  };
+
+  Blockly.Blocks['flip_forward'] = {
+    init: function() {
+      this.appendDummyInput().appendField("flip forward");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(COLORS.FLIP);
+      this.setTooltip("Command to flip forward");
+      this.setHelpUrl("");
+    }
+  };
   
+  Blockly.Blocks['flip_backward'] = {
+    init: function() {
+      this.appendDummyInput().appendField("flip backward");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(COLORS.FLIP);
+      this.setTooltip("Command to flip backward");
+      this.setHelpUrl("");
+    }
+  };
+
   Blockly.Blocks['land'] = {
     init: function() {
       this.appendDummyInput()
@@ -917,10 +952,11 @@ export const toolbarBlocksDefinitions = (Blockly) => {
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
       this.setColour(COLORS.LAND);
-      this.setTooltip("Command to take off");
+      this.setTooltip("Command to land");
       this.setHelpUrl("");
     }
   };
+
 
   Blockly.Blocks['land_for_seconds'] = {
     init: function() {

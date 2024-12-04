@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { getBannerReference } from '../config/navigationConfig.js';
+import ActionButton from './ActionButton.jsx';
 
 export const AppContainer = ({ children }) => {
     const navigate = useNavigate();
@@ -26,6 +27,9 @@ export const AppContainer = ({ children }) => {
             <div className="header-container">
                 <div className="nws-logo" onClick={handleLogoClick}>
                     <img src={getBannerReference()} alt="Logo" />
+                </div>
+                <div className="nws-home" onClick={handleLogoClick}>
+                    <ActionButton right small green title="Home"/>
                 </div>
             </div>
             <div className="application-content">

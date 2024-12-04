@@ -24,6 +24,9 @@
     height: auto; /* Maintain aspect ratio */
 }
 
-.application-content {
-
+.nws-home {
+    margin-left: auto; /* Push the home button to the right */
+    display: flex;
+    align-items: center;
+    padding-right: 30px;
 }
