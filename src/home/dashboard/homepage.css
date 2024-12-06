@@ -2,6 +2,7 @@
   background-color: #f0f0f0; /* Light background for better contrast */
   padding: 20px; /* General padding for the entire page */
   height: 100vh;
+  overflow-y: scroll;
 }
 
 .title-bar {
@@ -92,4 +93,17 @@
   width: 100%;
   bottom: 0;
   background-color: #f9f9f9;
+}
+
+
+.tile-banner {
+  top: 8px;
+  left: 8px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 1;
 }

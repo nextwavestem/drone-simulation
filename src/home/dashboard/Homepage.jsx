@@ -32,6 +32,7 @@ const HomePage = () => {
   }, []);
 
   const openCourseModal = (course) => {
+    if (course.soon) return;
     setSelectedCourse(course);
     setModalIsOpen(true);
   };
@@ -96,6 +97,7 @@ const HomePage = () => {
       <div className="tiles-container">
         {PROJECTS.map((course) => (
           <div key={course.id} className="tile" onClick={() => openCourseModal(course)}>
+            {course.soon && <div className="tile-banner">Coming Soon</div>}            
             <img src={course.image} alt={course.title} className="tile-image" />
             <div className="tile-title">{course.title}</div>
             <div className="tile-details">{course.detail}</div>
