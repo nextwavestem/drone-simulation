@@ -124,6 +124,38 @@ export const projects = () => {
             detail: "Learn how to navigate your drone",
             description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
         },
+        { 
+            id: 12, 
+            soon: true,
+            title: "CTE Information Technology", 
+            image: getImagePrefix("fixtures/cte_informationtechnology.png"), 
+            detail: "Learn how to navigate your drone",
+            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+        },
+        { 
+            id: 13, 
+            soon: true,
+            title: "CTE Law & Public Services", 
+            image: getImagePrefix("fixtures/cte_law.png"), 
+            detail: "Learn how to navigate your drone",
+            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+        },
+        { 
+            id: 14, 
+            soon: true,
+            title: "CTE Manufacturing", 
+            image: getImagePrefix("fixtures/cte_manufacturing.png"), 
+            detail: "Learn how to navigate your drone",
+            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+        },
+        { 
+            id: 15, 
+            soon: true,
+            title: "CTE Transportation", 
+            image: getImagePrefix("fixtures/cte_transportation.png"), 
+            detail: "Learn how to navigate your drone",
+            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+        },
     ]
 }
 
