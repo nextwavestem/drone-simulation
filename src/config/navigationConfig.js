@@ -3,7 +3,7 @@ export const getBannerReference = () => {
       return 'assets/fixtures/nws_banner.png';
     }
   
-    return '/drone-simulator/assets/fixtures/nws_banner.png';
+    return '/drone-simulation/assets/fixtures/nws_banner.png';
 };
 
 export const getPdfPrefix = () => {
@@ -11,7 +11,7 @@ export const getPdfPrefix = () => {
     return 'assets/pdfs/lessons';
   }
 
-  return '/drone-simulator/assets/pdfs/lessons';
+  return '/drone-simulation/assets/pdfs/lessons';
 };
 
 
