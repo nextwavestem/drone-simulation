@@ -16,17 +16,44 @@ import "../../css/blockpad.css";
 import Interpreter from 'js-interpreter';
 import emitter from '../../config/eventEmmiter.js';
 import  { getForLoopContent, isIfStatement, isForLoop }  from './config/helper.js';
+import { HimalayaLessons } from '../../lessons/himalaya/himalayas.js' 
 
+import  { getPdfPrefix, isHimalayas} from '../../../src/config/navigationConfig.js'
 Blockly.setLocale(En);
 
 const BlockPad = () => {
+  const hasLessons = isHimalayas();
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setModalOpen(!isModalOpen);
+  };
+
+  const emitBlock = (blockType) => {
+    // Emit block to the Blockly workspace
+    const workspace = Blockly.getMainWorkspace();
+    const block = workspace.newBlock(blockType); // Replace with your block type
+    block.initSvg();
+    block.render();
+    workspace.centerOnBlock(block.id);
+  };
+
+  const handleLessonClick = (pdfUrl, blockType) => {
+    // Open the PDF in a new tab
+    window.open( getPdfPrefix() + pdfUrl, '_blank');
+
+    // Emit the specified block to the Blockly environment
+    emitBlock(blockType);
+  };
   
   const blocklyDiv = useRef();
   let workspaceRef = useRef();
 
   const [toggleValue, setToggleValue] = useState(false);
   const clearWorkspace = () => { Blockly.getMainWorkspace().clear(); };
-  const reloadPage = () => { location.reload(); }
+  const reloadPage = () => {  emitter.emit('resetSimulationEnv'); }
+
+
   const handleToggleChange = () => { 
     setToggleValue((prevValue) => {
       const newVal = !prevValue;
@@ -66,7 +93,7 @@ const BlockPad = () => {
                 }
             };
             step();
-            await delay(5000);
+            await delay(10000);
         }
     };
 
@@ -181,6 +208,8 @@ const BlockPad = () => {
         <ActionButton onClick={clearWorkspace} title="Clear Workspace" green medium></ActionButton>
         <ActionButton onClick={runSimulator} title="Launch Simulation" medium></ActionButton>
         <ActionButton onClick={reloadPage} title="Reset Simulation" medium>/</ActionButton>
+        { hasLessons && <ActionButton title="Show Lessons" onClick={toggleModal} medium></ActionButton> }
+
         <label className="toggle-switch">
           <input type="checkbox" checked={toggleValue} onChange={handleToggleChange}/>
           <span className="slider"> Mouse Control </span>
@@ -188,6 +217,28 @@ const BlockPad = () => {
       </div>
       
       <div ref={blocklyDiv} className='blockly-area' />
+
+      {isModalOpen && (
+        <div className='blockly-modal'>
+          <div className='blockly-modal-content'>
+            <div className='blockly-modal-close' >
+              <ActionButton onClick={toggleModal} title="Close" small>/</ActionButton>
+            </div>
+            <h2>Select a Lesson</h2>
+            <div className='blockly-lesson-buttons'>
+              {HimalayaLessons.map((lesson, index) => (
+                <div
+                  key={index}
+                  className='blockly-modal-lesson-button'
+                  onClick={() => handleLessonClick(lesson.pdfUrl, lesson.blockType)}>
+                  {lesson.name}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
     
   );

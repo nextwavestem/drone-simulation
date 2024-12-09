@@ -131,7 +131,7 @@ const displayCoordinatesText = (text, position) => {
 
 const Model = () => {
   const { scene } = useGLTF('assets/models/mountains/snowy_mountains.glb'); 
-  const modelPosition = [0, -15, 0];
+  const modelPosition = [8, -9, -4];
 
   // Set the desired rotation (in radians)
   const rotation = [0, 98, 0]; // Example: Rotate 45 degrees around the Y-axis
@@ -145,7 +145,16 @@ const LandingPad = ({ position, size = [2, 0.1, 2], color = "yellow" }) => {
   return (
     <mesh position={position}>
       <boxGeometry args={size} />
-      <meshStandardMaterial color={color} emissive={new THREE.Color(0xffff00)} emissiveIntensity={0.5} />
+      <meshStandardMaterial color={color} emissive={new THREE.Color(color)} emissiveIntensity={0.5} />
+    </mesh>
+  );
+};
+
+const InitialPad = ({ position, size = [2, 0.1, 2], color = "red" }) => {
+  return (
+    <mesh position={position}>
+      <boxGeometry args={size} />
+      <meshStandardMaterial color={color} emissive={new THREE.Color(color)} emissiveIntensity={0.5} />
     </mesh>
   );
 };
@@ -208,10 +217,11 @@ const Mountain = ({
         cameraOffset={[0,5,-10]}
         lineColor={dronePathColor}
       />
+      <InitialPad position={[0, 0, 0]} />
 
-      <LandingPad position={[10, -3, 10]} />
-      {/* <LandingPad position={[-15, 0, -5]} />
-      <LandingPad position={[20, 0, -10]} /> */}
+      <LandingPad position={[7, 1, 0]} color="yellow"/>
+      <LandingPad position={[30, 6, 10]} color="cyan"/>
+
   </Canvas>
   );
 };

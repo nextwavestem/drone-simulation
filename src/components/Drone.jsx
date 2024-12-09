@@ -95,12 +95,15 @@ export const Drone = React.forwardRef(({
   };
   
   const droneMoveNegativeY = async ([distance, measurement]) => {
-    if(distance == -Infinity && measurement == "WAIT") {
-      await moveDroneToPosition([droneRef.current.position.x, 0, droneRef.current.position.z, 'CM']); 
-      await droneMovePositiveZ([5, 'CM']); 
-    }
-    else if(distance == -Infinity) {
-      await moveDroneToPosition([droneRef.current.position.x, 0, droneRef.current.position.z, 'CM']); 
+    if(distance == -Infinity) {
+      const hasWait = measurement.split(",")[1] != null;
+      if(hasWait) {
+        const waitTime = measurement.split(",")[1];
+        await moveDroneToPosition([droneRef.current.position.x, 0, droneRef.current.position.z, 'CM']); 
+        stallAndFly([parseInt(waitTime), true]);
+      } else {
+        await moveDroneToPosition([droneRef.current.position.x, 0, droneRef.current.position.z, 'CM']); 
+      }
     } else {
       await moveDroneOnAxis('y', [distance + NEGATIVE_OFFSET, measurement], -1); // Negative direction
     }
@@ -188,7 +191,7 @@ export const Drone = React.forwardRef(({
   };  
   
   const moveContinuous = (directionVector, seconds) => {
-    const distancePerFrame = 0.0005 * 75;
+    const distancePerFrame = 0.001 * 75;
     const startTime = Date.now();
     const totalTime = seconds * 1000;
     const direction = directionVector.clone().applyQuaternion(droneRef.current.quaternion).normalize();
@@ -306,6 +309,10 @@ export const Drone = React.forwardRef(({
 
   const updateDroneSpeed = (speed) =>{ droneSpeed = DEFAULT_DRONE_SPEED * speed; }
   
+  const resetDrone = async () => {
+    await updateDronePosition(new THREE.Vector3(0, 0, 0), [5, 'CM']);
+    setPath([new THREE.Vector3(0, 0, 0)]);
+  }
   
 
   useEffect(() => {
@@ -318,6 +325,7 @@ export const Drone = React.forwardRef(({
     emitter.on('commandFlyRight', droneMoveNegativeX);
     emitter.on('commandFlyTo', moveToPosition);
     emitter.on('commandRotate', rotateDrone);
+    emitter.on('resetSimulationEnv', resetDrone);
     
     emitter.on('commandSetWaitTime', stallAndFly);
     emitter.on('commandSetSpeed', updateDroneSpeed);
@@ -338,6 +346,7 @@ export const Drone = React.forwardRef(({
       emitter.off('commandFlyUp', droneMovePositiveY);
       emitter.off('commandFlyTo', moveToPosition);
       emitter.off('commandRotate', rotateDrone);
+      emitter.on('resetSimulationEnv', resetDrone);
 
       emitter.off('commandSetWaitTime', stallAndFly);
       emitter.off('commandSetSpeed', updateDroneSpeed);

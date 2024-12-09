@@ -180,8 +180,10 @@ export const toolbarFunctionHandler = () => {
     } 
 
     
-    javascriptGenerator.forBlock['land_for_seconds'] = function() {
-        return `flyDown(-Infinity, 'WAIT');`;
+    javascriptGenerator.forBlock['land_for_seconds'] = function(block) {
+        const stall_for = block.getFieldValue('SECONDS')
+
+        return `flyDown(-Infinity, 'WAIT,${stall_for}');`;
     }
     
     javascriptGenerator.forBlock['flip_left'] = function() {
