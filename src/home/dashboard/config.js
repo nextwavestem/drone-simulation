@@ -109,12 +109,14 @@ export const projects = () => {
             description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
         },
         { 
-            id: 13, 
-            soon: true,
+            id: 13,
+            
+            link: "/hospitality/",
             title: "CTE Hospitality", 
-            image: getImagePrefix("fixtures/cte_hospitality.png"), 
-            detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            image: getImagePrefix("fixtures/cte_hospitality.png"),
+            detail: "Learn how to navigate your drone in an Airbnb using blockly",
+            description1: "In the simulator, users take control of a drone, learning essential flight actions such as takeoff, landing, and maneuvering in three-dimensional space. As they explore a virtual hotel room—navigating around furniture, hallways, and balconies—they complete tasks that enhance critical thinking and spatial awareness. This hands-on experience provides insights into real-world applications of drone technology in hospitality, such as room inspections, guest services, and security monitoring.",
+            description2: "The Hotel Room Drone Simulator fosters creativity and curiosity by introducing users to the role of drones in modern hospitality operations. Set within a realistic hotel suite featuring stylish interiors, cozy lounge areas, and panoramic balcony views, this simulator provides an engaging blend of play and education. With its user-friendly interface and immersive environment, this experience makes learning about drone technology both fun and practical—perfect for future industry professionals and tech enthusiasts looking to explore the evolving role of automation in hotel management!" 
         },
         { 
             id: 11, 
