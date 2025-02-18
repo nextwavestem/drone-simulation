@@ -110,7 +110,7 @@ export const projects = () => {
         },
         { 
             id: 13,
-            
+            soon: true,
             link: "/hospitality/",
             title: "CTE Hospitality", 
             image: getImagePrefix("fixtures/cte_hospitality.png"),
