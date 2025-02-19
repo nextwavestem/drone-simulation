@@ -32,7 +32,7 @@ const HomePage = () => {
   }, []);
 
   const openCourseModal = (course) => {
-    if (course.soon) return;
+    if (course.soon && course.link.length == 0) return;
     setSelectedCourse(course);
     setModalIsOpen(true);
   };
