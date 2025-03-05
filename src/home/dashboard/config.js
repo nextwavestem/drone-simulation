@@ -55,6 +55,7 @@ export const projects = () => {
         { 
             id: 6, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/education",
             title: "CTE Education", 
             image: getImagePrefix("fixtures/cte_education.png"), 
             detail: "Learn how to navigate your drone",
@@ -63,6 +64,7 @@ export const projects = () => {
         { 
             id: 7, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/agriculture",
             title: "CTE Agriculture", 
             image: getImagePrefix("fixtures/cte_agriculture.png"), 
             detail: "Learn how to navigate your drone",
@@ -71,6 +73,7 @@ export const projects = () => {
         { 
             id: 8, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/business",
             title: "CTE Business", 
             image: getImagePrefix("fixtures/cte_business.png"), 
             detail: "Learn how to navigate your drone",
@@ -79,6 +82,7 @@ export const projects = () => {
         { 
             id: 9, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/communication",
             title: "CTE Communication", 
             image: getImagePrefix("fixtures/cte_communication.png"), 
             detail: "Learn how to navigate your drone",
@@ -87,6 +91,7 @@ export const projects = () => {
         { 
             id: 10, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/architecture",
             title: "CTE Architecture", 
             image: getImagePrefix("fixtures/cte_architecture.png"), 
             detail: "Learn how to navigate your drone",
@@ -95,6 +100,7 @@ export const projects = () => {
         { 
             id: 11, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/engineering",
             title: "CTE Engineering", 
             image: getImagePrefix("fixtures/cte_engineering.png"), 
             detail: "Learn how to navigate your drone",
@@ -103,6 +109,7 @@ export const projects = () => {
         { 
             id: 12, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/healthscience",
             title: "CTE Health Science", 
             image: getImagePrefix("fixtures/cte_healthscience.png"), 
             detail: "Learn how to navigate your drone",
@@ -111,7 +118,7 @@ export const projects = () => {
         { 
             id: 13,
             soon: true,
-            link: "/hospitality/",
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/hospitality",
             title: "CTE Hospitality", 
             image: getImagePrefix("fixtures/cte_hospitality.png"),
             detail: "Learn how to navigate your drone in an Airbnb using blockly",
@@ -121,6 +128,7 @@ export const projects = () => {
         { 
             id: 11, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/human-services",
             title: "CTE Human Services", 
             image: getImagePrefix("fixtures/cte_humanservices.png"), 
             detail: "Learn how to navigate your drone",
@@ -129,6 +137,7 @@ export const projects = () => {
         { 
             id: 12, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/information-technology",
             title: "CTE Information Technology", 
             image: getImagePrefix("fixtures/cte_informationtechnology.png"), 
             detail: "Learn how to navigate your drone",
@@ -137,6 +146,7 @@ export const projects = () => {
         { 
             id: 13, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/law",
             title: "CTE Law & Public Services", 
             image: getImagePrefix("fixtures/cte_law.png"), 
             detail: "Learn how to navigate your drone",
@@ -145,6 +155,7 @@ export const projects = () => {
         { 
             id: 14, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/manufacturing",
             title: "CTE Manufacturing", 
             image: getImagePrefix("fixtures/cte_manufacturing.png"), 
             detail: "Learn how to navigate your drone",
@@ -153,6 +164,7 @@ export const projects = () => {
         { 
             id: 15, 
             soon: true,
+            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/transportation",
             title: "CTE Transportation", 
             image: getImagePrefix("fixtures/cte_transportation.png"), 
             detail: "Learn how to navigate your drone",

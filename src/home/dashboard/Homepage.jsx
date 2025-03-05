@@ -22,6 +22,9 @@ const HomePage = () => {
   const navigate = useNavigate();
   const PROJECTS = projects();
 
+  const CTE_THEMES = PROJECTS.filter(project => project.title.includes("CTE"));
+  const NWS_THEMES = PROJECTS.filter(project => !project.title.includes("CTE"));
+
   useEffect(() => {
     // Check if the session cookie is present
     const session = Cookies.get('session_active');
@@ -32,7 +35,6 @@ const HomePage = () => {
   }, []);
 
   const openCourseModal = (course) => {
-    if (course.soon && course.link.length == 0) return;
     setSelectedCourse(course);
     setModalIsOpen(true);
   };
@@ -60,6 +62,9 @@ const HomePage = () => {
   };
 
   const launchSimulator = (course) => {
+    const isCTETheme = course.title.includes("CTE")
+
+    if (isCTETheme) window.open(course.url, "_blank");
     if (course) navigate(course.link);
   };
 
@@ -95,14 +100,30 @@ const HomePage = () => {
       </Modal>
 
       <div className="tiles-container">
-        {PROJECTS.map((course) => (
-          <div key={course.id} className="tile" onClick={() => openCourseModal(course)}>
-            {course.soon && <div className="tile-banner">Coming Soon</div>}            
-            <img src={course.image} alt={course.title} className="tile-image" />
-            <div className="tile-title">{course.title}</div>
-            <div className="tile-details">{course.detail}</div>
-          </div>
-        ))}
+        <h1 class="theme-title"> NWS THEMES </h1>
+        <div class="tiles-grid">
+          {NWS_THEMES.map((course) => (
+              <div key={course.id} className="tile" onClick={() => openCourseModal(course)}> 
+                <img src={course.image} alt={course.title} className="tile-image" />
+                <div className="tile-title">{course.title}</div>
+                <div className="tile-details">{course.detail}</div>
+              </div>
+            ))}
+        </div>
+        
+        <div class="divider"/>
+
+        <h1 class="theme-title"> CTE THEMES  </h1>
+        <div class="tiles-grid">
+          {CTE_THEMES.map((course) => (
+              <div key={course.id} className="tile" onClick={() => openCourseModal(course)}>
+                {course.soon && <div className="tile-banner">Coming Soon</div>}            
+                <img src={course.image} alt={course.title} className="tile-image" />
+                <div className="tile-title">{course.title}</div>
+                <div className="tile-details">{course.detail}</div>
+              </div>
+            ))}
+        </div>
       </div>
 
       <footer className="footer">
