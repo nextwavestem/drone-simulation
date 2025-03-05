@@ -5,5 +5,4 @@ Welcome to NextWaveSTEM Drone Simulation! This repository contains various theme
 2️ - Space Simulator \
 3️ - Egypt \
 4️ - Himalayas \
-5️ - Slate \
-6 - AirBnB 
+5️ - Slate 

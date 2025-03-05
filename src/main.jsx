@@ -6,7 +6,6 @@ import DroneSlateSimulator from "./simulators/DroneSlateSimulator.jsx";
 import DroneEgyptSimulator from "./simulators/DroneEgyptSimulator.jsx";
 import DroneCitySimulator from "./simulators/DroneCitySimulator.jsx";
 import DroneMountainSimulator from "./simulators/DroneMountainSimulator.jsx";
-import DroneHospitalitySimulator from "./simulators/DroneHospitalitySimulator.jsx";
 
 import HomePage from "./home/dashboard/Homepage.jsx";
 
@@ -20,7 +19,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/egypt" element={<DroneEgyptSimulator />} />
         <Route path="/city" element={<DroneCitySimulator />} />
         <Route path="/himalayas" element={<DroneMountainSimulator />} />
-        <Route path="/hospitality" element={<DroneHospitalitySimulator />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>
