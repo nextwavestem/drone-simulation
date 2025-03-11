@@ -59,7 +59,7 @@ export const projects = () => {
             title: "CTE Education", 
             image: getImagePrefix("fixtures/cte_education.png"), 
             detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            description1:"In this simulator, students program and pilot a drone to assist with everyday classroom tasks. The drone navigates around desks and the instructor’s area to deliver test papers, collect homework, assist with lost and found items, take attendance, and help with clean-up. This interactive experience builds problem-solving, spatial awareness, and basic programming skills using Blockly. By simulating real-world classroom scenarios, learners explore how drones can enhance organization and efficiency in educational settings, making the experience both educational and engaging.",
         },
         { 
             id: 7, 
@@ -68,16 +68,16 @@ export const projects = () => {
             title: "CTE Agriculture", 
             image: getImagePrefix("fixtures/cte_agriculture.png"), 
             detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            description1:"In this simulator, students program and control a drone to manage tasks in a virtual sunflower field. They’ll spray water, deliver pesticides from the barn, fly around to mimic a scarecrow, and monitor crops for diseases using zoom functions. The drone also assists with pollination and field mapping for crop monitoring. This engaging experience teaches problem-solving, spatial skills, and basic programming with Blockly while introducing real-world agricultural practices. Students learn how drones support modern farming, promoting efficiency and crop health in a fun, interactive way.",
         },
         { 
             id: 8, 
             soon: true,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/business",
-            title: "CTE Business", 
+            title: "CTE Business and Marketing", 
             image: getImagePrefix("fixtures/cte_business.png"), 
             detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            description1:"In this simulator, students program and pilot a drone to explore business and marketing tasks. They’ll fly drones carrying banners for aerial advertisements and simulate logistics operations, including secure cash transfers. This hands-on experience develops problem-solving, spatial awareness, and basic programming skills using Blockly. Learners gain insights into how drones are revolutionizing marketing strategies and logistics in modern business, making the activity both educational and engaging.",
         },
         { 
             id: 9, 
@@ -86,7 +86,7 @@ export const projects = () => {
             title: "CTE Communication", 
             image: getImagePrefix("fixtures/cte_communication.png"), 
             detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            description1:"In this imaginative simulator, students transform drones into tools for artistic expression and communication. They’ll program drones to perform synchronized aerial shows, creating dynamic patterns in the sky. Additionally, they can guide drones to craft letters, shapes, and figures, blending art with technology. This creative experience encourages innovation, spatial thinking, and basic Blockly programming skills. It introduces learners to how drones can be used in artistic performances and visual storytelling, inspiring them to explore new ways of combining technology and creativity.",
         },
         { 
             id: 10, 
@@ -95,7 +95,7 @@ export const projects = () => {
             title: "CTE Architecture", 
             image: getImagePrefix("fixtures/cte_architecture.png"), 
             detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            description1:"In this simulator, students navigate a drone through the historic Hallwyl Museum, exploring its intricate architecture and exhibits. They’ll program the drone to guide virtual tourists to specific spots, patrol the museum for security, and conduct interactive tours of different areas. This experience enhances spatial awareness, problem-solving, and Blockly programming skills while offering insights into how drones can assist in preserving and showcasing architectural landmarks. It’s an engaging way for learners to appreciate architectural beauty while discovering the practical uses of drone technology in cultural spaces.",
         },
         { 
             id: 11, 
@@ -122,8 +122,7 @@ export const projects = () => {
             title: "CTE Hospitality", 
             image: getImagePrefix("fixtures/cte_hospitality.png"),
             detail: "Learn how to navigate your drone in an Airbnb using blockly",
-            description1: "In the simulator, users take control of a drone, learning essential flight actions such as takeoff, landing, and maneuvering in three-dimensional space. As they explore a virtual hotel room—navigating around furniture, hallways, and balconies—they complete tasks that enhance critical thinking and spatial awareness. This hands-on experience provides insights into real-world applications of drone technology in hospitality, such as room inspections, guest services, and security monitoring.",
-            description2: "The Hotel Room Drone Simulator fosters creativity and curiosity by introducing users to the role of drones in modern hospitality operations. Set within a realistic hotel suite featuring stylish interiors, cozy lounge areas, and panoramic balcony views, this simulator provides an engaging blend of play and education. With its user-friendly interface and immersive environment, this experience makes learning about drone technology both fun and practical—perfect for future industry professionals and tech enthusiasts looking to explore the evolving role of automation in hotel management!" 
+            description1: "In this simulator, students pilot a drone to conduct a virtual room inspection in a recently vacated hotel suite. They’ll navigate around furniture, check for cleanliness, and ensure safety standards are met. This activity encourages spatial awareness, critical thinking, and basic drone programming skills using Blockly. By exploring real-world hospitality tasks, learners gain insight into how drones assist with housekeeping, inspections, and safety checks. The immersive environment makes learning fun and practical, fostering curiosity about drone technology and its role in modern hospitality services."
         },
         { 
             id: 11, 
@@ -141,7 +140,7 @@ export const projects = () => {
             title: "CTE Information Technology", 
             image: getImagePrefix("fixtures/cte_informationtechnology.png"), 
             detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            description1:"In this simulator, students program and pilot a drone within a virtual office setting filled with desks and desktops. The drone assists with helpdesk support by identifying and addressing tech issues, ensures cybersecurity by monitoring for potential threats, delivers equipment across workstations, and oversees office activities for efficient operations. This hands-on experience develops problem-solving, critical thinking, and Blockly programming skills while demonstrating how drones can enhance IT support and security. It’s an engaging way for learners to explore real-world tech solutions in modern office environments.",
         },
         { 
             id: 13, 
@@ -150,7 +149,7 @@ export const projects = () => {
             title: "CTE Law & Public Services", 
             image: getImagePrefix("fixtures/cte_law.png"), 
             detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            description1:"In this simulator, students pilot a drone through a virtual city, learning about law enforcement and traffic safety. The drone monitors for traffic violations like running red lights, oversees pedestrian safety, and assists in identifying parking violations. It can also help in crowd monitoring and ensuring public spaces follow local regulations. This interactive experience fosters critical thinking, problem-solving, and Blockly programming skills while teaching the importance of law and order in urban settings. Students gain insights into how drones support city safety and legal enforcement in a fun, educational way.",
         },
         { 
             id: 14, 
@@ -159,7 +158,7 @@ export const projects = () => {
             title: "CTE Manufacturing", 
             image: getImagePrefix("fixtures/cte_manufacturing.png"), 
             detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            description1:"In this simulator, students navigate a drone inside a virtual boat manufacturing shed, assisting with key industrial tasks. They’ll program the drone to conduct inspections for quality control, manage inventory by locating materials, and assist in finding misplaced tools or parts. This hands-on experience builds problem-solving, spatial awareness, and Blockly programming skills while introducing learners to real-world applications of drones in manufacturing. It highlights how drones enhance efficiency, safety, and organization in industrial settings, making learning both practical and engaging.",
         },
         { 
             id: 15, 
@@ -168,7 +167,7 @@ export const projects = () => {
             title: "CTE Transportation", 
             image: getImagePrefix("fixtures/cte_transportation.png"), 
             detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
+            description1:"In this simulator, students program and pilot a drone to explore transportation solutions in a busy city. Tasks include monitoring traffic flow, delivering small packages, reporting traffic accidents, and assisting in locating available parking spaces. This interactive experience builds problem-solving, spatial awareness, and Blockly programming skills while demonstrating how drones enhance urban mobility and logistics. Students gain valuable insights into innovative drone applications, making the learning experience dynamic and relevant to real-world transportation challenges.",
         },
     ]
 }
