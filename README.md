@@ -1,5 +1,5 @@
 🚀 Drone Simulation Themes
-Welcome to NextWaveSTEM Drone Simulation! This repository contains various themes that enhance the visual and interactive experience of drone simulations. Each theme provides a unique environment to explore drone behavior based on Blockly to navigate the scene.
+Welcome to NextWaveSTEM Drone Simulation! This repository contains various themes that enhance the visual and interactive experience of drone simulations. Each theme provides a unique environment to explore drone behavior based on Blockly to navigate the environment.
 
 1 - Cityscape \
 2️ - Space Simulator \
