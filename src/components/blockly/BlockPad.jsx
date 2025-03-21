@@ -29,6 +29,9 @@ Blockly.setLocale(En);
 
 const BlockPad = () => {
   const hasLessons = isHimalayas();
+  let functionDefinitions = {};
+  let variableStore = {}; // Global storage for variables
+
   const [isModalOpen, setModalOpen] = useState(false);
 
   const [showNote, setShowNote] = useState(false);
@@ -148,99 +151,28 @@ const BlockPad = () => {
     };
     runLoop(arrayCommands.length);
   };
-  /*const runFunctionSimulator = () => {
-    var code = javascriptGenerator.workspaceToCode(
-      Blockly.getMainWorkspace().current
-    );
-
-    // Check if the code contains a function definition
-    if (code.includes("function")) {
-      console.log("Executing Function Simulator...");
-      console.log(code);
-      const interpreter = new Interpreter(code, initInterpreter);
-      const step = () => {
-        if (interpreter.step()) {
-          requestAnimationFrame(step);
-        } else {
-          console.log("Function Execution Completed");
-        }
-      };
-      step();
-    } else {
-      console.log("No function found, skipping function simulator.");
-    }
-  };*/
 
   const runFunctionSimulator = () => {
     var code = javascriptGenerator.workspaceToCode(
       Blockly.getMainWorkspace().current
     );
-    console.log(code);
 
     if (code.includes("function")) {
       console.log("Executing Function Simulator...");
+      console.log(code);
 
-      // function extraction
-      const functionDefinitions = {};
-      const functionMatches = [
-        ...code.matchAll(/function\s+([a-zA-Z_]\w*)\s*\(\)\s*\{([\s\S]*?)\}/g),
-      ];
+      const interpreter = new Interpreter(code, initInterpreter);
 
-      functionMatches.forEach((match) => {
-        const functionName = match[1].trim();
-        const functionBody = match[2]
-          .trim()
-          .split(";")
-          .map((cmd) => cmd.trim())
-          .filter((cmd) => cmd);
-        functionDefinitions[functionName] = functionBody;
-      });
-
-      console.log("Extracted function definitions:", functionDefinitions);
-
-      // Extract standalone commands (excluding function definitions)
-      const standaloneCommands = code
-        .split("\n")
-        .filter(
-          (line) =>
-            line.trim().match(/^[a-zA-Z_]\w*\(.*\);$/) &&
-            !line.includes("function")
-        )
-        .map((cmd) => cmd.trim());
-
-      console.log("Extracted standalone commands:", standaloneCommands);
-
-      const executeCommandsSequentially = async (commandList) => {
-        for (const command of commandList) {
-          console.log(`Executing: ${command}`);
-
-          const functionCallMatch = command.match(/^([a-zA-Z_]\w*)\(\);$/);
-          if (functionCallMatch) {
-            const functionName = functionCallMatch[1].trim();
-
-            if (functionDefinitions[functionName]) {
-              console.log(`Executing function: ${functionName}`);
-              const functionCommands = functionDefinitions[functionName];
-
-              await executeCommandsSequentially(functionCommands);
-              continue;
-            } else {
-              console.error(
-                `Error: Function '${functionName}' is not defined!`
-              );
-            }
-          } else {
-            const interpreterInstance = new Interpreter(
-              command,
-              initInterpreter
-            );
-            interpreterInstance.run();
-            await new Promise((resolve) => setTimeout(resolve, 5000)); // 5s delay
-          }
+      const step = () => {
+        if (interpreter.step()) {
+          // Add delay between steps (e.g., 200ms)
+          setTimeout(step, 500);
+        } else {
+          console.log("Function Execution Completed");
         }
       };
 
-      executeCommandsSequentially(standaloneCommands);
+      step();
     } else {
       console.log("No function found, skipping function simulator.");
     }
