@@ -125,15 +125,6 @@ export const projects = () => {
             description1: "In this simulator, students pilot a drone to conduct a virtual room inspection in a recently vacated hotel suite. They’ll navigate around furniture, check for cleanliness, and ensure safety standards are met. This activity encourages spatial awareness, critical thinking, and basic drone programming skills using Blockly. By exploring real-world hospitality tasks, learners gain insight into how drones assist with housekeeping, inspections, and safety checks. The immersive environment makes learning fun and practical, fostering curiosity about drone technology and its role in modern hospitality services."
         },
         { 
-            id: 11, 
-            soon: true,
-            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/human-services",
-            title: "CTE Human Services", 
-            image: getImagePrefix("fixtures/cte_humanservices.png"), 
-            detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
-        },
-        { 
             id: 12, 
             soon: true,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/information-technology",
