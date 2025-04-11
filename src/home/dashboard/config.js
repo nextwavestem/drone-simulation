@@ -107,15 +107,6 @@ export const projects = () => {
             description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
         },
         { 
-            id: 12, 
-            soon: true,
-            url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/healthscience",
-            title: "CTE Health Science", 
-            image: getImagePrefix("fixtures/cte_healthscience.png"), 
-            detail: "Learn how to navigate your drone",
-            description1:"Unlock your creativity as you learn to navigate your drone and draw letters in this environment using Blockly, a visual programming language designed for all ages! In this engaging activity, you'll explore the fundamentals of drone programming while gaining hands-on experience in controlling your drone's movements.",
-        },
-        { 
             id: 13,
             soon: true,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/hospitality",
