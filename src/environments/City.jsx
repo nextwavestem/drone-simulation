@@ -9,6 +9,7 @@ import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import emitter from '../config/eventEmmiter.js';
+import ScreenshotCapture from '../components/ScreenshotCapture.jsx';
 
 const loader = new FontLoader(); 
 let GlobalCamera;
@@ -138,38 +139,14 @@ const CityModel = () => {
   return <primitive object={scene} position={modelPosition} scale={3}/>;
 };
 
-const ScreenshotCapture = () => {
-  const { gl } = useThree();
-
-  const captureImage = () => {
-    const dataUrl = gl.domElement.toDataURL("image/png");
-
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `city_${timestamp}.png`;
-    link.click();
-  };
-
-  useEffect(() => {
-    const handleScreenshotCommand = () => {
-      captureImage();
-    };
-    emitter.on('commandTakeScreenShot', handleScreenshotCommand);
-    return () => {
-      emitter.off('commandTakeScreenShot', handleScreenshotCommand);
-    };
-  }, []);
-
-  return null; 
-};
-
 const City = ({
   droneRef,
   measurementViewEnabled,
   mouseControlEnabled,
 }) => {
   const controlsRef = useRef();
+  const droneCameraRef = useRef();
+
   const [pins, setPins] = useState([]); // State to track pin positions
   
   return (
@@ -183,7 +160,7 @@ const City = ({
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
-      <ScreenshotCapture />
+      <ScreenshotCapture droneCameraRef={droneCameraRef} environment="city"/>
       <Drone
         ref={droneRef}
         controlsRef={controlsRef}
@@ -192,6 +169,7 @@ const City = ({
         droneScale={0.01}
         cameraOffset={[0.01, 0.2, -0.5]}
         lineColor={dronePathColor}
+        droneCameraRef={droneCameraRef}
       />
   
   </Canvas>

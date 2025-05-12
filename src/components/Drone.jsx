@@ -6,7 +6,7 @@
 
 import * as THREE from "three";
 import PropTypes from "prop-types";
-import { useGLTF, Line } from "@react-three/drei";
+import { useGLTF, Line, PerspectiveCamera } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import React, { useMemo, useRef, useEffect, useState } from "react";
 import emitter from "../config/eventEmmiter";
@@ -33,6 +33,7 @@ export const Drone = React.forwardRef(
       droneScale,
       cameraOffset,
       lineColor,
+      droneCameraRef,
     },
     ref
   ) => {
@@ -475,6 +476,13 @@ export const Drone = React.forwardRef(
     return (
       <>
         <mesh ref={droneRef}>
+        <PerspectiveCamera
+          makeDefault={false}
+          ref={droneCameraRef}
+          fov={75}
+          rotation={[0,59.6,0]}
+          position={[0,1,0]} // Position relative to drone
+        />
           <primitive
             object={memoizedDrone.scene}
             position={[0, 0, 0]}

@@ -9,7 +9,7 @@ import * as THREE from 'three';
 import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import emitter from '../config/eventEmmiter.js';
+import ScreenshotCapture from '../components/ScreenshotCapture.jsx';
 
 const loader = new FontLoader(); 
 let GlobalCamera;
@@ -159,39 +159,14 @@ const InitialPad = ({ position, size = [2, 0.1, 2], color = "red" }) => {
   );
 };
 
-const ScreenshotCapture = () => {
-  const { gl } = useThree();
-
-  const captureImage = () => {
-    const dataUrl = gl.domElement.toDataURL("image/png");
-
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `mountain_${timestamp}.png`;
-    link.click();
-  };
-
-  useEffect(() => {
-    const handleScreenshotCommand = () => {
-      captureImage();
-    };
-    emitter.on('commandTakeScreenShot', handleScreenshotCommand);
-    return () => {
-      emitter.off('commandTakeScreenShot', handleScreenshotCommand);
-    };
-  }, []);
-
-  return null; 
-};
-
-
 const Mountain = ({
   droneRef,
   measurementViewEnabled,
   mouseControlEnabled,
 }) => {
   const controlsRef = useRef();
+  const droneCameraRef = useRef();
+
   const [pins, setPins] = useState([]); // State to track pin positions
   
   return (
@@ -206,7 +181,7 @@ const Mountain = ({
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
-      <ScreenshotCapture />
+      <ScreenshotCapture droneCameraRef={droneCameraRef} environment="mountain"/>
 
       <Drone
         ref={droneRef}
@@ -216,6 +191,7 @@ const Mountain = ({
         droneScale={0.2}
         cameraOffset={[0,5,-10]}
         lineColor={dronePathColor}
+        droneCameraRef={droneCameraRef}
       />
       <InitialPad position={[0, 0, 0]} />
 
