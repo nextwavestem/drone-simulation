@@ -130,13 +130,37 @@ const displayCoordinatesText = (text, position) => {
   });
 };
 
+const getInitialCordinates = () => {
+  const droneLocations = {
+    food_courts: {
+      position:[-17, -0.7, -60],
+      rotation: [0, 0, 0]
+    },
+    shopping_center: {
+      position:[-28, -0.8, 25],
+      rotation: [0, -55, 0]
+    },
+    home:{
+      position:[-90, -0.8, 75],
+      rotation: [0, -55, 0]
+    }
+  }
+
+  const currentHref = window.location.href;
+
+  if(currentHref.includes("/city/home")) return { initialPosition: droneLocations.home.position , initialRotation: droneLocations.home.rotation }
+  if(currentHref.includes("/city/food_court")) return { initialPosition: droneLocations.food_courts.position , initialRotation: droneLocations.food_courts.rotation }
+  if(currentHref.includes("/city/shopping_center")) return { initialPosition: droneLocations.shopping_center.position , initialRotation: droneLocations.shopping_center.rotation }
+}
+
 const CityModel = () => {
   // const { scene } = useGLTF('assets/models/egypt/environment.glb'); // Load the GLB model
-  const { scene } = useGLTF('assets/models/city/city_3d_model.glb'); // Load the GLB model
-  const modelPosition = [4.2, -0.84, 0]; // Set your desired position (x, y, z)
-  const rotation = [0, 14.1, 0];
+  const { scene } = useGLTF('assets/models/city/city.glb'); // Load the GLB model'
+  const { initialPosition, initialRotation }  = getInitialCordinates()
+  const modelPosition = initialPosition // Set your desired position (x, y, z)
+  const rotation = initialRotation
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={3}/>;
+  return <primitive object={scene} position={modelPosition} scale={5}/>;
 };
 
 const City = ({
@@ -166,8 +190,8 @@ const City = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.01}
-        cameraOffset={[0.01, 0.2, -0.5]}
+        droneScale={0.05}
+        cameraOffset={[0, 0.2, -1]}
         lineColor={dronePathColor}
         droneCameraRef={droneCameraRef}
       />

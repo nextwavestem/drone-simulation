@@ -68,6 +68,10 @@ const HomePage = () => {
     if (course) navigate(course.link);
   };
 
+  const launchPositionbasedSimulator = (course, location) =>{
+    if (course) navigate(location.url);
+  }
+
   return (
     <div className="home-page">
       <div className="header-container">
@@ -96,7 +100,20 @@ const HomePage = () => {
         <p>{selectedCourse ? selectedCourse.description1 : 'More details about the selected course.'}</p>
         <p>{selectedCourse ? selectedCourse.description2 : ''}</p>
 
-        <ActionButton onClick={() => launchSimulator(selectedCourse)} title="Launch" />
+        {selectedCourse && selectedCourse.multiple_start ==true  ? (
+          selectedCourse.locations.map((location) => (
+            <ActionButton
+              key={location.title}
+              onClick={() => launchPositionbasedSimulator(selectedCourse, location)}
+              title={location.title}
+            />
+          ))
+        ) : (
+          <ActionButton
+            onClick={() => launchSimulator(selectedCourse)}
+            title="Launch"
+          />
+        )}
       </Modal>
 
       <div className="tiles-container">

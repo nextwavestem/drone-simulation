@@ -8,7 +8,8 @@ const ActionButton = ({ onClick, title, green, small, medium, right, disableButt
     width: small ? '100px' : medium ? '200px' : '100%',
     cursor: 'pointer',
     marginLeft: right ? 'auto' : '0', // Use margin-left to push the button to the right
-    disable: disableButton
+    disable: disableButton,
+    marginBottom: '10px'
   };
 
   return (

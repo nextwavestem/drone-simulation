@@ -17,7 +17,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/space" element={<DroneSpaceSimulator />} />
         <Route path="/slate" element={<DroneSlateSimulator />} />
         <Route path="/egypt" element={<DroneEgyptSimulator />} />
-        <Route path="/city" element={<DroneCitySimulator />} />
+        <Route path="/city/home" element={<DroneCitySimulator />} />
+        <Route path="/city/shopping_center" element={<DroneCitySimulator />} />
+        <Route path="/city/food_court" element={<DroneCitySimulator />} />
         <Route path="/himalayas" element={<DroneMountainSimulator />} />
       </Routes>
     </HashRouter>
