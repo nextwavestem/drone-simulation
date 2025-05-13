@@ -1,22 +1,21 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
+import * as THREE from 'three';
+import PropTypes from 'prop-types';
+import { Drone } from '../components/Drone.jsx';
+import { useRef, useEffect, useState } from "react";
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
-import { useRef, useEffect, useState } from "react";
-import PropTypes from 'prop-types';
-import * as THREE from 'three';
-import { Drone } from '../components/Drone.jsx';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import emitter from '../config/eventEmmiter.js';
 import ScreenshotCapture from '../components/ScreenshotCapture.jsx';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-const loader = new FontLoader(); 
+const loader = new FontLoader()
 let GlobalCamera;
 let GlobalScene;
-let lastPosition = null;
-let measurementLineColor = "white";
-let measurementPinColor = "black";
+let lastPosition = null
+let measurementLineColor = "white"
+let measurementPinColor = "black"
 let dronePathColor = "yellow"
 let launchPadColor = "white"
 let planeColor="lightgreen"
@@ -28,26 +27,26 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      // Move camera to top-down view
-      camera.position.set(0, 10, 0); // should be (0, 100, 0)
-      camera.lookAt(new THREE.Vector3(0, 5, 0));
+
+      camera.position.set(0, 20, 0); 
+      camera.lookAt(new THREE.Vector3(0, 10, 0));
       camera.updateProjectionMatrix();
 
       if (controlsRef.current) {
-        controlsRef.current.maxPolarAngle = Math.PI / 2; // Lock to top-down
+        controlsRef.current.maxPolarAngle = Math.PI / 2; 
         controlsRef.current.minPolarAngle = Math.PI / 2;
-        controlsRef.current.enableRotate = false; // Disable rotation
+        controlsRef.current.enableRotate = false; 
       }
     } else {
-      // Reset camera to default view
+
       camera.position.set(50, 50, 50);
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
       if (controlsRef.current) {
-        controlsRef.current.maxPolarAngle = Math.PI; // Allow full rotation
+        controlsRef.current.maxPolarAngle = Math.PI; 
         controlsRef.current.minPolarAngle = 0;
-        controlsRef.current.enableRotate = true; // Enable rotation
+        controlsRef.current.enableRotate = true; 
       }
     }
     GlobalCamera = camera;
@@ -82,18 +81,16 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(vector, GlobalCamera);
 
-    // Intersect the scene
     const intersections = raycaster.intersectObject(GlobalScene, true);
 
     if (intersections.length > 0) {
-      const point = intersections[0].point; // Get the intersection point
-      setPins((prevPins) => [...prevPins, point]); // Update pin positions
+      const point = intersections[0].point; 
+      setPins((prevPins) => [...prevPins, point]); 
 
       if (lastPosition == null) {
-        lastPosition = droneRef.current.position.clone(); // Clone to avoid reference issues
+        lastPosition = droneRef.current.position.clone(); 
       }
 
-      // Prepare the coordinates text
       const points = [lastPosition, point];
       const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
       const lineMaterial = new THREE.LineBasicMaterial({ color: measurementLineColor });
@@ -102,17 +99,20 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       lastPosition.copy(point);
       const coordinatesText = `X: ${point.x.toFixed(2)} cm, Y: ${point.y.toFixed(2)} cm, Z: ${point.z.toFixed(2)} cm`;
       
-      displayCoordinatesText(coordinatesText, point);
+      displayCoordinatesText(coordinatesText, point, 0.2);
+    } else {
+      displayCoordinatesText(coordinatesText, point, 0);
     }
+
   }
 };
 
-const displayCoordinatesText = (text, position) => {
+const displayCoordinatesText = (text, position, textSize) => {
   loader.load('assets/helvetiker_regular.typeface.json', (font) => {
     const textGeometry = new TextGeometry(text, {
       font: font,
-      size: 0.2, // Adjust size as needed
-      height: 0.01, // Adjust height
+      size: textSize,
+      height: 0.01, 
       curveSegments: 1,
       bevelEnabled: false,
       bevelThickness: 0.0,
@@ -123,10 +123,10 @@ const displayCoordinatesText = (text, position) => {
     const textMaterial = new THREE.MeshBasicMaterial({ color: measurementTextColor });
     const textMesh = new THREE.Mesh(textGeometry, textMaterial);
     console.log(position)
-    textMesh.position.set(position.x, position.y + 1, position.z); // Adjust Y position slightly above the line point
-    textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
+    textMesh.position.set(position.x, position.y + 1, position.z); 
+    textMesh.rotation.x = -Math.PI / 2; 
 
-    GlobalScene.add(textMesh); // Add the text mesh to the scene
+    GlobalScene.add(textMesh); 
   }, undefined, (error) => {
     console.error('An error occurred loading the font:', error);
   });
@@ -136,13 +136,12 @@ const displayCoordinatesText = (text, position) => {
 
 const Plane = () => {
   const planeRef = useRef();
-  const planeSize = 13;
+  const planeSize = 50;
 
   return (
     <>
     <mesh ref={planeRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]}>
       <planeGeometry args={[planeSize, planeSize]} />
-      {/* Blackboard effect: dark color and roughness for a matte finish */}
       <meshStandardMaterial color={planeColor} roughness={0.9} />
     </mesh>
 
@@ -159,7 +158,7 @@ const Plane = () => {
 const LandingPad = ({ position }) => {
   return (
     <mesh position={position}>
-      <boxGeometry args={[1, 0.1, 1]} /> 
+      <boxGeometry args={[3, 0.3, 3]} /> 
       <meshStandardMaterial color={launchPadColor} />
     </mesh>
   );

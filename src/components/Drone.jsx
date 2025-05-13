@@ -57,9 +57,9 @@ export const Drone = React.forwardRef(
 
     const [path, setPath] = useState([new THREE.Vector3(0, 0, 0)]);
     const [isStalling, setIsStalling] = useState(false);
-    const [isFlipping, setIsFlipping] = useState(false); // State to track flipping status
+    const [isFlipping, setIsFlipping] = useState(false);
 
-    const DEFAULT_DRONE_SPEED = 0.033333333332;
+    const DEFAULT_DRONE_SPEED = 0.001;
     let droneSpeed = DEFAULT_DRONE_SPEED;
 
     const updateDronePosition = (directionVector, [distance, unit]) => {

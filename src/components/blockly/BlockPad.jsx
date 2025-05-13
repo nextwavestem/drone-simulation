@@ -29,9 +29,6 @@ Blockly.setLocale(En);
 
 const BlockPad = () => {
   const hasLessons = isHimalayas();
-  let functionDefinitions = {};
-  let variableStore = {}; // Global storage for variables
-
   const [isModalOpen, setModalOpen] = useState(false);
 
   const [showNote, setShowNote] = useState(false);
@@ -137,7 +134,7 @@ const BlockPad = () => {
     const runLoop = async (iterations) => {
       for (let i = 0; i < iterations; i++) {
         const command = arrayCommands[i];
-        console.log(command);
+        console.log("executing"+ command);
 
         const interpreter = new Interpreter(command, initInterpreter);
         const step = () => {
@@ -145,7 +142,13 @@ const BlockPad = () => {
           else console.log("Simulation completed");
         };
         step();
-        await delay(5000);
+        let delay_seconds = 5000
+        const match = command.match(/\d+(\.\d+)?/);
+        const number = match ? parseFloat(match[0]) : null;
+        console.log("number"+ number);
+        if(number > 0) delay_seconds = 1000 * number 
+
+        await delay(delay_seconds);
       }
       console.log("Mission Completed");
     };
