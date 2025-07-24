@@ -68,7 +68,7 @@ export const projects = () => {
         },
         { 
             id: 6, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/education",
             title: "CTE Education", 
             image: getImagePrefix("fixtures/cte_education.png"), 
@@ -77,7 +77,7 @@ export const projects = () => {
         },
         { 
             id: 7, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/agriculture",
             title: "CTE Agriculture", 
             image: getImagePrefix("fixtures/cte_agriculture.png"), 
@@ -86,7 +86,7 @@ export const projects = () => {
         },
         { 
             id: 8, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/business",
             title: "CTE Business and Marketing", 
             image: getImagePrefix("fixtures/cte_business.png"), 
@@ -95,7 +95,7 @@ export const projects = () => {
         },
         { 
             id: 9, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/communication",
             title: "CTE Communication", 
             image: getImagePrefix("fixtures/cte_communication.png"), 
@@ -104,7 +104,7 @@ export const projects = () => {
         },
         { 
             id: 10, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/architecture",
             title: "CTE Architecture", 
             image: getImagePrefix("fixtures/cte_architecture.png"), 
@@ -113,7 +113,7 @@ export const projects = () => {
         },
         { 
             id: 11, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/engineering",
             title: "CTE Engineering", 
             image: getImagePrefix("fixtures/cte_engineering.png"), 
@@ -122,7 +122,7 @@ export const projects = () => {
         },
         { 
             id: 13,
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/hospitality",
             title: "CTE Hospitality", 
             image: getImagePrefix("fixtures/cte_hospitality.png"),
@@ -131,7 +131,7 @@ export const projects = () => {
         },
         { 
             id: 12, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/information-technology",
             title: "CTE Information Technology", 
             image: getImagePrefix("fixtures/cte_informationtechnology.png"), 
@@ -140,7 +140,7 @@ export const projects = () => {
         },
         { 
             id: 13, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/law",
             title: "CTE Law & Public Services", 
             image: getImagePrefix("fixtures/cte_law.png"), 
@@ -149,7 +149,7 @@ export const projects = () => {
         },
         { 
             id: 14, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/manufacturing",
             title: "CTE Manufacturing", 
             image: getImagePrefix("fixtures/cte_manufacturing.png"), 
@@ -158,7 +158,7 @@ export const projects = () => {
         },
         { 
             id: 15, 
-            soon: true,
+            soon: false,
             url: "https://nextwavestem.github.io/drone-simulation-cte-alpha/#/transportation",
             title: "CTE Transportation", 
             image: getImagePrefix("fixtures/cte_transportation.png"), 
