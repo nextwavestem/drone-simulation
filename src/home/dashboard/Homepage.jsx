@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import Cookies from 'js-cookie'; // Import js-cookie for session management
 import ActionButton from '../../components/ActionButton.jsx';
 import { getImagePrefix, projects } from './config.js';
-import './HomePage.css';
+import './homepage.css';
 import { validCredentials } from '../../config/validCredentials.js';
 import LoginForm from './LoginForm.jsx'; // Import the new LoginForm component
 
@@ -117,8 +117,8 @@ const HomePage = () => {
       </Modal>
 
       <div className="tiles-container">
-        <h1 class="theme-title"> NWS THEMES </h1>
-        <div class="tiles-grid">
+        <h1 className="theme-title"> NWS THEMES </h1>
+        <div className="tiles-grid">
           {NWS_THEMES.map((course) => (
               <div key={course.id} className="tile" onClick={() => openCourseModal(course)}> 
                 <img src={course.image} alt={course.title} className="tile-image" />
@@ -128,10 +128,10 @@ const HomePage = () => {
             ))}
         </div>
         
-        <div class="divider"/>
+        <div className="divider" />
 
-        <h1 class="theme-title"> CTE THEMES  </h1>
-        <div class="tiles-grid">
+        <h1 className="theme-title"> CTE THEMES  </h1>
+        <div className="tiles-grid">
           {CTE_THEMES.map((course) => (
               <div key={course.id} className="tile" onClick={() => openCourseModal(course)}>
                 {course.soon && <div className="tile-banner">Coming Soon</div>}            

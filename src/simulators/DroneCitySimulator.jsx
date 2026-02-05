@@ -7,7 +7,9 @@ import City from '../environments/City.jsx';
 import "../css/droneCitySimulator.css";
 
 const DroneCitySimulator = () => {
-  window.gtag('event', 'page_view', { page_path: window.location.pathname });
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag("event", "page_view", { page_path: window.location.pathname });
+  }
 
   const droneRef = useRef(); // Create a ref for the Drone component
   const [measurementView, setMeasurementView] = useState(false);

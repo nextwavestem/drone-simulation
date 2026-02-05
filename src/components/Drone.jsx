@@ -13,7 +13,6 @@ import emitter from "../config/eventEmmiter";
 import gsap from "gsap";
 
 const DISTANCE_INCHES_OFFSET = 2.54;
-const NEGATIVE_OFFSET = 1;
 
 const CIRCLE_RIGHT = "CIRCLE_RIGHT";
 const CIRCLE_LEFT = "CIRCLE_LEFT";
@@ -60,98 +59,109 @@ export const Drone = React.forwardRef(
     const [isFlipping, setIsFlipping] = useState(false);
 
     const DEFAULT_DRONE_SPEED = 0.001;
-    let droneSpeed = DEFAULT_DRONE_SPEED;
+    const droneSpeedRef = useRef(DEFAULT_DRONE_SPEED);
+    const activeMoveRef = useRef({ cancel: null });
+    const commandQueueRef = useRef(Promise.resolve());
+
+    const stopActiveMovement = () => {
+      if (activeMoveRef.current.cancel) {
+        activeMoveRef.current.cancel();
+        activeMoveRef.current.cancel = null;
+      }
+    };
+
+    const enqueueCommand = (commandFn) => {
+      const queued = commandQueueRef.current.then(() => commandFn());
+      commandQueueRef.current = queued.catch(() => {});
+      return queued;
+    };
 
     const updateDronePosition = (directionVector, [distance, unit]) => {
       return new Promise((resolve) => {
         const drone = droneRef.current;
         if (!drone) return resolve();
-    
-        const step = droneSpeed;
-        const convertedDistance = unit === "INCHES" ? distance * DISTANCE_INCHES_OFFSET : distance;
-    
-        const direction = directionVector.clone().normalize().applyQuaternion(drone.quaternion);
-        const targetPosition = drone.position.clone().add(direction.clone().multiplyScalar(convertedDistance));
-   
+
+        stopActiveMovement();
+        let cancelled = false;
+        activeMoveRef.current.cancel = () => {
+          cancelled = true;
+        };
+
+        const step = droneSpeedRef.current;
+        const convertedDistance =
+          unit === INCHES ? distance * DISTANCE_INCHES_OFFSET : distance;
+
+        if (!Number.isFinite(convertedDistance) || convertedDistance === 0) {
+          return resolve();
+        }
+
+        const direction = directionVector
+          .clone()
+          .normalize()
+          .applyQuaternion(drone.quaternion);
+        const targetPosition = drone.position
+          .clone()
+          .add(direction.clone().multiplyScalar(convertedDistance));
+
         const animateMove = () => {
-          if (!droneRef.current) return resolve();
-    
+          if (cancelled || !droneRef.current) return resolve();
+
           const currentPosition = drone.position.clone();
           const remaining = targetPosition.clone().sub(currentPosition);
           const distanceToTarget = remaining.length();
-    
+
           if (distanceToTarget <= step) {
             drone.position.copy(targetPosition);
             return resolve();
           }
-    
+
           const moveStep = remaining.normalize().multiplyScalar(step);
           drone.position.add(moveStep);
-    
-          // Optional: maintain orientation toward movement direction
-          const lookAtPoint = targetPosition.clone();
-          lookAtPoint.y = drone.position.y; // keep level
-          drone.lookAt(lookAtPoint);
-    
+
           requestAnimationFrame(animateMove);
         };
-    
+
         animateMove();
       });
     };
 
-    const droneMovePositiveZ = async ([distance, measurement]) => {
-      await moveDroneOnAxis("z", [distance, measurement], 1); // Positive direction
-    };
+    const droneMovePositiveZ = async ([distance, measurement]) =>
+      enqueueCommand(() => moveDroneOnAxis("z", [distance, measurement], -1));
 
-    const droneMoveNegativeZ = async ([distance, measurement]) => {
-      await moveDroneOnAxis("z", [distance + NEGATIVE_OFFSET, measurement], -1); // Negative direction
-    };
+    const droneMoveNegativeZ = async ([distance, measurement]) =>
+      enqueueCommand(() => moveDroneOnAxis("z", [distance, measurement], 1));
 
-    const droneMovePositiveX = async ([distance, measurement]) => {
-      await moveDroneOnAxis("x", [distance, measurement], 1); // Positive direction
-    };
+    const droneMovePositiveX = async ([distance, measurement]) =>
+      enqueueCommand(() => moveDroneOnAxis("x", [distance, measurement], 1));
 
-    const droneMoveNegativeX = async ([distance, measurement]) => {
-      await moveDroneOnAxis("x", [distance + NEGATIVE_OFFSET, measurement], -1); // Negative direction
-    };
+    const droneMoveNegativeX = async ([distance, measurement]) =>
+      enqueueCommand(() => moveDroneOnAxis("x", [distance, measurement], -1));
 
-    const droneMovePositiveY = async ([distance, measurement]) => {
-      await moveDroneOnAxis("y", [distance, measurement], 1); // Positive direction
-    };
+    const droneMovePositiveY = async ([distance, measurement]) =>
+      enqueueCommand(() => moveDroneOnAxis("y", [distance, measurement], 1));
 
-    const droneMoveNegativeY = async ([distance, measurement]) => {
-      if (distance == -Infinity) {
-        const hasWait = measurement.split(",")[1] != null;
-        if (hasWait) {
-          const waitTime = measurement.split(",")[1];
+    const droneMoveNegativeY = async ([distance, measurement]) =>
+      enqueueCommand(async () => {
+        if (!Number.isFinite(distance)) {
+          const waitTime =
+            typeof measurement === "string" ? measurement.split(",")[1] : null;
           await moveDroneToPosition([
             droneRef.current.position.x,
             0,
             droneRef.current.position.z,
             "CM",
           ]);
-          stallAndFly([parseInt(waitTime), true]);
-        } else {
-          await moveDroneToPosition([
-            droneRef.current.position.x,
-            0,
-            droneRef.current.position.z,
-            "CM",
-          ]);
+          if (waitTime != null) {
+            await stall(parseFloat(waitTime));
+          }
+          return;
         }
-      } else {
-        await moveDroneOnAxis(
-          "y",
-          [distance + NEGATIVE_OFFSET, measurement],
-          -1
-        ); // Negative direction
-      }
-    };
 
-    const moveToPosition = async (position) => {
-      await moveDroneToPosition(position);
-    };
+        await moveDroneOnAxis("y", [distance, measurement], -1);
+      });
+
+    const moveToPosition = async (position) =>
+      enqueueCommand(() => moveDroneToPosition(position));
 
     const flipDrone = async (flipDirection) => {
       if (!droneRef.current) return;
@@ -211,8 +221,6 @@ export const Drone = React.forwardRef(
     ) => {
       if (!droneRef.current) return;
 
-      const position = droneRef.current.position.clone();
-
       if (measurement === "SECONDS") {
         const directionVector = new THREE.Vector3(
           axis === "x" ? direction : 0,
@@ -220,70 +228,85 @@ export const Drone = React.forwardRef(
           axis === "z" ? direction : 0
         );
 
-        moveContinuous(directionVector, distance);
+        await moveContinuous(directionVector, distance);
       } else {
-        const convertedDistance =
-          measurement === "INCHES"
-            ? distance * DISTANCE_INCHES_OFFSET
-            : distance;
-        position[axis] += convertedDistance * direction;
-
-        await updateDronePosition(
-          new THREE.Vector3(position.x, position.y, position.z),
-          [distance, measurement]
+        const directionVector = new THREE.Vector3(
+          axis === "x" ? direction : 0,
+          axis === "y" ? direction : 0,
+          axis === "z" ? direction : 0
         );
+
+        await updateDronePosition(directionVector, [distance, measurement]);
       }
     };
 
     const moveContinuous = (directionVector, seconds) => {
-      const distancePerFrame = 0.001 * 75;
-      const startTime = Date.now();
-      const totalTime = seconds * 1000;
-      const direction = directionVector
-        .clone()
-        .applyQuaternion(droneRef.current.quaternion)
-        .normalize();
+      return new Promise((resolve) => {
+        if (!droneRef.current) return resolve();
+        let cancelled = false;
+        activeMoveRef.current.cancel = () => {
+          cancelled = true;
+        };
 
-      const moveStep = () => {
-        const elapsedTime = Date.now() - startTime;
+        const distancePerFrame = droneSpeedRef.current * 75;
+        const startTime = Date.now();
+        const totalTime = seconds * 1000;
+        const direction = directionVector
+          .clone()
+          .applyQuaternion(droneRef.current.quaternion)
+          .normalize();
 
-        if (elapsedTime < totalTime) {
-          droneRef.current.position.add(
-            direction.clone().multiplyScalar(distancePerFrame)
-          );
-          requestAnimationFrame(moveStep);
-        } else {
-          console.log("Movement complete.");
-        }
-      };
+        const moveStep = () => {
+          if (cancelled || !droneRef.current) return resolve();
+          const elapsedTime = Date.now() - startTime;
 
-      moveStep();
+          if (elapsedTime < totalTime) {
+            droneRef.current.position.add(
+              direction.clone().multiplyScalar(distancePerFrame)
+            );
+            requestAnimationFrame(moveStep);
+          } else {
+            resolve();
+          }
+        };
+
+        moveStep();
+      });
     };
 
     const moveDroneToPosition = async (position) => {
-      let [newX, newY, newZ, unit] = position;
+      return new Promise((resolve) => {
+        if (!droneRef.current) return resolve();
+        let cancelled = false;
+        activeMoveRef.current.cancel = () => {
+          cancelled = true;
+        };
 
-      if (unit == RESET) {
-        setPath([new THREE.Vector3(0, 0, 0)]);
-      }
+        let [newX, newY, newZ, unit] = position;
 
-      // Convert coordinates if the unit is in inches
-      if (unit === INCHES) {
-        newX *= DISTANCE_INCHES_OFFSET;
-        newY *= DISTANCE_INCHES_OFFSET;
-        newZ *= DISTANCE_INCHES_OFFSET;
-      }
+        if (unit == RESET) {
+          setPath([new THREE.Vector3(0, 0, 0)]);
+        }
 
-      const targetPosition = new THREE.Vector3(newX, newY, newZ);
-      const speed = 0.05;
+        if (unit === INCHES) {
+          newX *= DISTANCE_INCHES_OFFSET;
+          newY *= DISTANCE_INCHES_OFFSET;
+          newZ *= DISTANCE_INCHES_OFFSET;
+        }
 
-      const moveStep = () => {
-        const currentPosition = droneRef.current.position.clone();
-        const distance = currentPosition.distanceTo(targetPosition);
+        const targetPosition = new THREE.Vector3(newX, newY, newZ);
+        const speed = Math.max(droneSpeedRef.current * 50, 0.01);
 
-        if (distance < 0.01) {
-          droneRef.current.position.copy(targetPosition);
-        } else {
+        const moveStep = () => {
+          if (cancelled || !droneRef.current) return resolve();
+          const currentPosition = droneRef.current.position.clone();
+          const distance = currentPosition.distanceTo(targetPosition);
+
+          if (distance < 0.01) {
+            droneRef.current.position.copy(targetPosition);
+            return resolve();
+          }
+
           const direction = targetPosition
             .clone()
             .sub(currentPosition)
@@ -291,83 +314,122 @@ export const Drone = React.forwardRef(
           const moveDistance = Math.min(distance, speed);
           droneRef.current.position.add(direction.multiplyScalar(moveDistance));
           requestAnimationFrame(moveStep);
-        }
-      };
+        };
 
-      moveStep();
+        moveStep();
+      });
     };
 
     const rotateDrone = (value) => {
       const [direction, degrees, radius, unit] = value;
-
-      const DISTANCE_INCHES_OFFSET = 2.54;
-      const radiusInCm =
-        unit === "INCHES" ? radius * DISTANCE_INCHES_OFFSET : radius;
-      const radiusInThreeJsUnits = radiusInCm / 100;
-
       const totalRadians = THREE.MathUtils.degToRad(degrees);
-      const isClockwise =
-        direction === "CIRCLE_RIGHT" || direction === "ARC_RIGHT" || direction === "RIGHT";
+
+      if (direction === LEFT || direction === RIGHT) {
+        rotateInPlace(totalRadians, direction === RIGHT);
+        return;
+      }
+
+      if (!Number.isFinite(radius)) {
+        return;
+      }
+
+      const radiusInCm =
+        unit === INCHES ? radius * DISTANCE_INCHES_OFFSET : radius;
+      const radiusInThreeJsUnits = radiusInCm / 100;
+      const isClockwise = direction === CIRCLE_RIGHT || direction === ARC_RIGHT;
 
       moveInArc(radiusInThreeJsUnits, totalRadians, isClockwise);
     };
 
+    const rotateInPlace = (radians, clockwise) => {
+      return new Promise((resolve) => {
+        if (!droneRef.current) return resolve();
+        let cancelled = false;
+        activeMoveRef.current.cancel = () => {
+          cancelled = true;
+        };
+
+        const frames = 60;
+        const increment = radians / frames;
+        let frame = 0;
+
+        const animateRotate = () => {
+          if (cancelled || !droneRef.current) return resolve();
+          if (frame >= frames) return resolve();
+
+          droneRef.current.rotation.y += clockwise ? -increment : increment;
+          frame += 1;
+          requestAnimationFrame(animateRotate);
+        };
+
+        animateRotate();
+      });
+    };
+
     const moveInArc = (radius, radians, clockwise) => {
-      const startAngle = droneRef.current.rotation.y;
-      const angleIncrement = radians / 60; // Adjust for smoothness
-      const initialPosition = droneRef.current.position.clone(); // Initial position to calculate relative arc
-      const centerX = initialPosition.x - radius * Math.sin(startAngle);
-      const centerZ = initialPosition.z - radius * Math.cos(startAngle);
-
-      let angleTraveled = 0;
-
-      const animateArc = () => {
-        if (Math.abs(angleTraveled) >= Math.abs(radians)) {
-          return;
+      return new Promise((resolve) => {
+        if (!droneRef.current || !Number.isFinite(radius) || radius === 0) {
+          return resolve();
         }
+        let cancelled = false;
+        activeMoveRef.current.cancel = () => {
+          cancelled = true;
+        };
 
-        angleTraveled += angleIncrement;
-        const currentAngle =
-          startAngle + (clockwise ? -angleTraveled : angleTraveled);
+        const startAngle = droneRef.current.rotation.y;
+        const angleIncrement = radians / 60;
+        const initialPosition = droneRef.current.position.clone();
+        const centerX = initialPosition.x - radius * Math.sin(startAngle);
+        const centerZ = initialPosition.z - radius * Math.cos(startAngle);
 
-        const x = centerX + radius * Math.sin(currentAngle);
-        const z = centerZ + radius * Math.cos(currentAngle);
+        let angleTraveled = 0;
 
-        droneRef.current.position.set(x, initialPosition.y, z);
-        droneRef.current.rotation.y = currentAngle;
+        const animateArc = () => {
+          if (cancelled || !droneRef.current) return resolve();
+          if (Math.abs(angleTraveled) >= Math.abs(radians)) return resolve();
 
-        requestAnimationFrame(animateArc);
-      };
+          angleTraveled += angleIncrement;
+          const currentAngle =
+            startAngle + (clockwise ? -angleTraveled : angleTraveled);
 
-      animateArc();
+          const x = centerX + radius * Math.sin(currentAngle);
+          const z = centerZ + radius * Math.cos(currentAngle);
+
+          droneRef.current.position.set(x, initialPosition.y, z);
+          droneRef.current.rotation.y = currentAngle;
+
+          requestAnimationFrame(animateArc);
+        };
+
+        animateArc();
+      });
     };
 
     const stall = (waitTime) => {
       return new Promise((resolve) => setTimeout(resolve, waitTime * 1000));
     };
 
-    const stallAndFly = async ([waitTime, shouldFly]) => {
-      setIsStalling(true);
-      await stall(waitTime);
-      setIsStalling(false);
-      if (shouldFly) {
-        await updateDronePosition(
-          new THREE.Vector3(
-            droneRef.current.position.x,
-            droneRef.current.position.y + 5,
-            droneRef.current.position.z
-          ),
-          [5, "CM"]
-        );
-      }
-    };
+    const stallAndFly = async ([waitTime, shouldFly]) =>
+      enqueueCommand(async () => {
+        setIsStalling(true);
+        await stall(waitTime);
+        setIsStalling(false);
+        if (shouldFly) {
+          await moveDroneOnAxis("y", [5, "CM"], 1);
+        }
+      });
 
     const updateDroneSpeed = (speed) => {
-      droneSpeed = DEFAULT_DRONE_SPEED * speed;
+      droneSpeedRef.current = DEFAULT_DRONE_SPEED * speed;
     };
 
     const resetDrone = async () => {
-      await updateDronePosition(new THREE.Vector3(0, 0, 0), [5, "CM"]);
+      commandQueueRef.current = Promise.resolve();
+      stopActiveMovement();
+      await moveDroneToPosition([0, 0, 0, "CM"]);
+      if (droneRef.current) {
+        droneRef.current.rotation.set(0, 0, 0);
+      }
       setPath([new THREE.Vector3(0, 0, 0)]);
     };
 
@@ -377,8 +439,8 @@ export const Drone = React.forwardRef(
       emitter.on("commandFlyBackward", droneMoveNegativeZ);
       emitter.on("commandFlyUp", droneMovePositiveY);
       emitter.on("commandFlyDown", droneMoveNegativeY);
-      emitter.on("commandFlyLeft", droneMovePositiveX);
-      emitter.on("commandFlyRight", droneMoveNegativeX);
+      emitter.on("commandFlyLeft", droneMoveNegativeX);
+      emitter.on("commandFlyRight", droneMovePositiveX);
       emitter.on("commandFlyTo", moveToPosition);
       emitter.on("commandRotate", rotateDrone);
       emitter.on("resetSimulationEnv", resetDrone);
@@ -404,9 +466,10 @@ export const Drone = React.forwardRef(
         emitter.off("commandFlyLeft", droneMoveNegativeX);
         emitter.off("commandFlyRight", droneMovePositiveX);
         emitter.off("commandFlyUp", droneMovePositiveY);
+        emitter.off("commandFlyDown", droneMoveNegativeY);
         emitter.off("commandFlyTo", moveToPosition);
         emitter.off("commandRotate", rotateDrone);
-        emitter.on("resetSimulationEnv", resetDrone);
+        emitter.off("resetSimulationEnv", resetDrone);
 
         emitter.off("commandSetWaitTime", stallAndFly);
         emitter.off("commandSetSpeed", updateDroneSpeed);
@@ -422,41 +485,45 @@ export const Drone = React.forwardRef(
       velocity.current.set(0, 0, 0);
       if (!droneRef.current) return;
 
-      if (isFlipping) {
+      if (isFlipping || isStalling) {
         camera.lookAt(droneRef.current.position);
         return;
       }
 
       // Calculate the forward direction based on the drone's current rotation
-      const forwardDirection = new THREE.Vector3(0, 0, 1).applyQuaternion(
+      const forwardDirection = new THREE.Vector3(0, 0, -1).applyQuaternion(
         droneRef.current.quaternion
       ); // Apply current drone rotation
-      const backwardDirection = new THREE.Vector3(0, 0, -1).applyQuaternion(
+      const backwardDirection = new THREE.Vector3(0, 0, 1).applyQuaternion(
         droneRef.current.quaternion
       ); // Apply current drone rotation
-      const leftDirection = new THREE.Vector3(1, 0, 0).applyQuaternion(
+      const leftDirection = new THREE.Vector3(-1, 0, 0).applyQuaternion(
         droneRef.current.quaternion
       ); // Apply current drone rotation
-      const rightDirection = new THREE.Vector3(-1, 0, 0).applyQuaternion(
+      const rightDirection = new THREE.Vector3(1, 0, 0).applyQuaternion(
         droneRef.current.quaternion
       ); // Apply current drone rotation
 
       if (keys.current.w)
-        velocity.current.add(forwardDirection.multiplyScalar(droneSpeed)); // Forward
+        velocity.current.add(
+          forwardDirection.multiplyScalar(droneSpeedRef.current)
+        );
       if (keys.current.s)
-        velocity.current.add(backwardDirection.multiplyScalar(droneSpeed)); // Backward
+        velocity.current.add(
+          backwardDirection.multiplyScalar(droneSpeedRef.current)
+        );
       if (keys.current.a)
-        velocity.current.add(leftDirection.multiplyScalar(droneSpeed)); // left
+        velocity.current.add(leftDirection.multiplyScalar(droneSpeedRef.current));
       if (keys.current.d)
-        velocity.current.add(rightDirection.multiplyScalar(droneSpeed)); // right
+        velocity.current.add(rightDirection.multiplyScalar(droneSpeedRef.current));
 
       if (keys.current.z)
         droneRef.current.rotation.y += THREE.MathUtils.degToRad(1); // Rotate left
       if (keys.current.c)
         droneRef.current.rotation.y -= THREE.MathUtils.degToRad(1); // Rotate right
 
-      if (keys.current.u) velocity.current.y += droneSpeed; // Up
-      if (keys.current.p) velocity.current.y -= droneSpeed; // Down
+      if (keys.current.u) velocity.current.y += droneSpeedRef.current;
+      if (keys.current.p) velocity.current.y -= droneSpeedRef.current;
 
       droneRef.current.position.add(velocity.current);
 
