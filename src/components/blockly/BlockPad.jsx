@@ -58,6 +58,40 @@ const BlockPad = () => {
   let workspaceRef = useRef();
 
   const [toggleValue, setToggleValue] = useState(false);
+  const runStateRef = useRef({
+    runId: 0,
+    rafIds: new Set(),
+    timeoutIds: new Set(),
+  });
+
+  const clearScheduledWork = () => {
+    runStateRef.current.rafIds.forEach((id) => cancelAnimationFrame(id));
+    runStateRef.current.timeoutIds.forEach((id) => clearTimeout(id));
+    runStateRef.current.rafIds.clear();
+    runStateRef.current.timeoutIds.clear();
+  };
+
+  const startNewRun = () => {
+    clearScheduledWork();
+    runStateRef.current.runId += 1;
+    return runStateRef.current.runId;
+  };
+
+  const scheduleRaf = (callback) => {
+    const id = requestAnimationFrame(() => {
+      runStateRef.current.rafIds.delete(id);
+      callback();
+    });
+    runStateRef.current.rafIds.add(id);
+  };
+
+  const scheduleTimeout = (callback, ms) => {
+    const id = setTimeout(() => {
+      runStateRef.current.timeoutIds.delete(id);
+      callback();
+    }, ms);
+    runStateRef.current.timeoutIds.add(id);
+  };
   const clearWorkspace = () => {
     Blockly.getMainWorkspace().clear();
   };
@@ -80,10 +114,15 @@ const BlockPad = () => {
     );
     console.log(code);
 
+    const runId = startNewRun();
     const interpreter = new Interpreter(code, initInterpreter);
     const step = () => {
-      if (interpreter.step()) requestAnimationFrame(step);
-      else console.log("Simulation completed");
+      if (runId !== runStateRef.current.runId) return;
+      if (interpreter.step()) {
+        scheduleRaf(step);
+      } else {
+        console.log("Simulation completed");
+      }
     };
     step();
   };
@@ -94,15 +133,19 @@ const BlockPad = () => {
     );
     const loop = getForLoopContent(code);
 
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const runId = startNewRun();
+    const delay = (ms) =>
+      new Promise((resolve) => scheduleTimeout(resolve, ms));
     const runCommands = async (commands) => {
       for (const command of commands) {
+        if (runId !== runStateRef.current.runId) return;
         console.log(`Executing command: ${command.trim()}`);
 
         const interpreter = new Interpreter(command, initInterpreter);
         const step = () => {
+          if (runId !== runStateRef.current.runId) return;
           if (interpreter.step()) {
-            requestAnimationFrame(step);
+            scheduleRaf(step);
           } else {
             console.log("Command execution completed");
           }
@@ -114,6 +157,7 @@ const BlockPad = () => {
 
     const runLoop = async (iterations, commands) => {
       for (let i = 0; i < iterations; i++) {
+        if (runId !== runStateRef.current.runId) return;
         console.log(`Iteration ${i + 1} of ${iterations}`);
         await runCommands(commands);
       }
@@ -129,24 +173,34 @@ const BlockPad = () => {
 
   const runBasicSimulator = (code) => {
     console.log(code);
-    const arrayCommands = code.split(";");
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const arrayCommands = code
+      .split(";")
+      .map((cmd) => cmd.trim())
+      .filter((cmd) => cmd);
+    const runId = startNewRun();
+    const delay = (ms) =>
+      new Promise((resolve) => scheduleTimeout(resolve, ms));
     const runLoop = async (iterations) => {
       for (let i = 0; i < iterations; i++) {
+        if (runId !== runStateRef.current.runId) return;
         const command = arrayCommands[i];
-        console.log("executing"+ command);
+        console.log("executing" + command);
 
         const interpreter = new Interpreter(command, initInterpreter);
         const step = () => {
-          if (interpreter.step()) requestAnimationFrame(step);
-          else console.log("Simulation completed");
+          if (runId !== runStateRef.current.runId) return;
+          if (interpreter.step()) {
+            scheduleRaf(step);
+          } else {
+            console.log("Simulation completed");
+          }
         };
         step();
-        let delay_seconds = 5000
+        let delay_seconds = 5000;
         const match = command.match(/\d+(\.\d+)?/);
         const number = match ? parseFloat(match[0]) : null;
-        console.log("number"+ number);
-        if(number > 0) delay_seconds = 1000 * number 
+        console.log("number" + number);
+        if (number > 0) delay_seconds = 1000 * number;
 
         await delay(delay_seconds);
       }
@@ -164,12 +218,14 @@ const BlockPad = () => {
       console.log("Executing Function Simulator...");
       console.log(code);
 
+      const runId = startNewRun();
       const interpreter = new Interpreter(code, initInterpreter);
 
       const step = () => {
+        if (runId !== runStateRef.current.runId) return;
         if (interpreter.step()) {
           // Add delay between steps (e.g., 200ms)
-          setTimeout(step, 500);
+          scheduleTimeout(step, 500);
         } else {
           console.log("Function Execution Completed");
         }
