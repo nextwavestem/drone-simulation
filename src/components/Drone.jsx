@@ -51,6 +51,11 @@ export const Drone = React.forwardRef(
       p: false,
       t: false,
     });
+    const resetKeys = () => {
+      Object.keys(keys.current).forEach((key) => {
+        keys.current[key] = false;
+      });
+    };
 
     const { camera } = useThree();
 
@@ -87,7 +92,7 @@ export const Drone = React.forwardRef(
           cancelled = true;
         };
 
-        const step = droneSpeedRef.current;
+        const step = Math.max(droneSpeedRef.current * 50, 0.01);
         const convertedDistance =
           unit === INCHES ? distance * DISTANCE_INCHES_OFFSET : distance;
 
@@ -426,6 +431,9 @@ export const Drone = React.forwardRef(
     const resetDrone = async () => {
       commandQueueRef.current = Promise.resolve();
       stopActiveMovement();
+      resetKeys();
+      setIsStalling(false);
+      setIsFlipping(false);
       await moveDroneToPosition([0, 0, 0, "CM"]);
       if (droneRef.current) {
         droneRef.current.rotation.set(0, 0, 0);
@@ -456,9 +464,12 @@ export const Drone = React.forwardRef(
       const handleKeyUp = (event) => {
         keys.current[event.key] = false;
       };
-
       window.addEventListener("keydown", handleKeyDown);
       window.addEventListener("keyup", handleKeyUp);
+      window.addEventListener("blur", resetKeys);
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) resetKeys();
+      });
 
       return () => {
         emitter.off("commandFlyFoward", droneMovePositiveZ);
@@ -477,6 +488,8 @@ export const Drone = React.forwardRef(
 
         window.removeEventListener("keydown", handleKeyDown);
         window.removeEventListener("keyup", handleKeyUp);
+        window.removeEventListener("blur", resetKeys);
+        document.removeEventListener("visibilitychange", resetKeys);
       };
     }, [keys]);
 

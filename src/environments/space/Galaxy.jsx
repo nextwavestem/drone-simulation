@@ -5,10 +5,11 @@ import { useFrame } from "@react-three/fiber";
 import { Earth }  from './Earth'
 import { Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Sun } from './Planets';
 import { Drone } from '../../components/Drone.jsx';
+import ScreenshotCapture from '../../components/ScreenshotCapture.jsx';
 import PropTypes from 'prop-types';
 import emitter from '../../config/eventEmmiter.js';
 
-const Galaxy = ({ droneRef }) => { // Accept droneRef as a prop
+const Galaxy = ({ droneRef, droneCameraRef }) => { // Accept droneRef as a prop
   const controlsRef = useRef();
   const [measurementView, setMeasurementView] = useState(false);
   const [mouseControl, setMouseControl] = useState(false);
@@ -51,7 +52,9 @@ const Galaxy = ({ droneRef }) => { // Accept droneRef as a prop
         droneScale={0.5}
         cameraOffset={[0, 4, -10]}
         lineColor="lightgreen"
+        droneCameraRef={droneCameraRef}
       />
+      <ScreenshotCapture droneCameraRef={droneCameraRef} environment="space" />
     </>
   );
 };
@@ -69,6 +72,7 @@ const AnimatedStars = () => {
 
 Galaxy.propTypes = {
   droneRef: PropTypes.object.isRequired, // Define the prop type
+  droneCameraRef: PropTypes.object.isRequired,
 };
 
 export default Galaxy;
